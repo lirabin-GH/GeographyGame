@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoLearn</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #22263a;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.15);
+  --text: #f0f2ff;
+  --muted: #7a82a0;
+  --accent: #4f8aff;
+  --accent2: #7c3aed;
+  --green: #22c55e;
+  --red: #ef4444;
+  --amber: #f59e0b;
+  --ocean: #0d2340;
+  --land: #2a3a52;
+  --land-hover: #3a5080;
+  --land-selected: #4f6aaa;
+  --land-correct: #1a4a2a;
+  --land-incorrect: #4a1a1a;
+  --stroke: #1a2a40;
+  --stroke-selected: #6a9aff;
+  --stroke-correct: #22c55e;
+  --stroke-incorrect: #ef4444;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ── SCREENS ── */
+.screen { display: none; width: 100vw; height: 100vh; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ── HOME ── */
+#home {
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  background: radial-gradient(ellipse at 30% 20%, #1a2a5a 0%, var(--bg) 60%);
+  position: relative;
+  overflow: hidden;
+}
+#home::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79,138,255,0.06) 0%, transparent 70%);
+  top: -100px; left: -100px;
+  pointer-events: none;
+}
+.home-inner { text-align: center; z-index: 1; }
+.home-eyebrow {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.2rem;
+}
+.home-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.2rem;
+  background: linear-gradient(135deg, #f0f2ff 0%, #8aaeff 50%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.home-sub {
+  font-size: 1rem;
+  color: var(--muted);
+  margin-bottom: 3rem;
+  font-weight: 300;
+}
+.mode-grid {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.mode-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.8rem 2rem;
+  cursor: pointer;
+  width: 160px;
+  text-align: center;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.mode-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(79,138,255,0.08) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.mode-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+.mode-card:hover::before { opacity: 1; }
+.mode-card.locked { opacity: 0.45; cursor: not-allowed; }
+.mode-card.locked:hover { transform: none; border-color: var(--border); }
+.mode-icon { font-size: 2.2rem; margin-bottom: 0.8rem; }
+.mode-label { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; }
+.mode-desc { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; }
+.mode-badge {
+  position: absolute; top: 10px; right: 10px;
+  font-size: 0.6rem; font-weight: 600;
+  background: var(--surface2); color: var(--muted);
+  padding: 2px 6px; border-radius: 4px; letter-spacing: 0.05em;
+}
+
+/* ── CONTINENT SELECT ── */
+#continent-select {
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  gap: 2.5rem;
+}
+.cs-header { text-align: center; }
+.cs-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.8rem; font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+.cs-sub { color: var(--muted); font-size: 0.9rem; }
+.continent-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  max-width: 560px;
+  width: 90%;
+}
+.cont-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.1rem 1.2rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.6rem;
+  font-weight: 500; font-size: 0.9rem;
+  transition: all 0.18s;
+}
+.cont-card:hover { border-color: var(--accent); background: var(--surface2); transform: translateY(-2px); }
+.cont-flag { font-size: 1.5rem; }
+.back-btn {
+  position: absolute; top: 1.2rem; left: 1.2rem;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--muted); padding: 0.5rem 1rem;
+  border-radius: 8px; cursor: pointer; font-size: 0.83rem;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.back-btn:hover { color: var(--text); border-color: var(--border2); }
+
+/* ── MAP SCREEN ── */
+#map-screen {
+  flex-direction: row;
+  background: var(--ocean);
+}
+.map-sidebar {
+  width: 260px; min-width: 260px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  padding: 1rem;
+  gap: 0.75rem;
+  overflow-y: auto;
+  z-index: 10;
+}
+.sidebar-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 0.2rem;
+}
+.sidebar-continent {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.25rem; font-weight: 700;
+}
+.sidebar-rule { border: none; border-top: 1px solid var(--border); }
+.instr-box {
+  background: var(--surface2);
+  border-radius: 8px; padding: 0.7rem 0.8rem;
+  font-size: 0.77rem; color: var(--muted); line-height: 1.6;
+}
+.instr-box strong { color: var(--text); }
+.sel-box {
+  background: rgba(79,138,255,0.08);
+  border: 1px solid rgba(79,138,255,0.25);
+  border-radius: 10px; padding: 0.75rem;
+}
+.sel-box-label { font-size: 0.72rem; color: var(--accent); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.4rem; }
+.country-inp {
+  width: 100%; padding: 7px 10px;
+  background: var(--bg); border: 1px solid var(--border2);
+  border-radius: 7px; color: var(--text); font-size: 0.88rem;
+  font-family: 'DM Sans', sans-serif; outline: none;
+  transition: border-color 0.15s;
+}
+.country-inp:focus { border-color: var(--accent); }
+.inp-hint { font-size: 0.68rem; color: var(--muted); margin-top: 0.3rem; }
+.zoom-row { display: flex; gap: 0.5rem; }
+.zoom-btn {
+  flex: 1; background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text); border-radius: 7px; padding: 0.45rem;
+  cursor: pointer; font-size: 1.1rem; font-weight: 700; text-align: center;
+  transition: all 0.15s; font-family: monospace;
+}
+.zoom-btn:hover { border-color: var(--accent); color: var(--accent); }
+.score-row { font-size: 0.8rem; color: var(--muted); display: flex; justify-content: space-between; }
+.score-correct { color: var(--green); font-weight: 600; }
+.submit-btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff; border: none; border-radius: 10px;
+  padding: 0.8rem; cursor: pointer; font-size: 0.92rem; font-weight: 600;
+  font-family: 'Syne', sans-serif; margin-top: auto;
+  transition: opacity 0.15s; letter-spacing: 0.02em;
+}
+.submit-btn:hover { opacity: 0.88; }
+.reset-btn {
+  background: none; border: 1px solid var(--border);
+  color: var(--muted); border-radius: 8px; padding: 0.55rem;
+  cursor: pointer; font-size: 0.8rem; font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.reset-btn:hover { border-color: var(--border2); color: var(--text); }
+
+/* Drill-down hint after submit */
+.drill-hint {
+  background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.2);
+  border-radius: 8px; padding: 0.65rem 0.75rem;
+  font-size: 0.75rem; color: #86efac; line-height: 1.5;
+  display: none;
+}
+.drill-hint.visible { display: block; }
+.drill-btn {
+  width: 100%;
+  background: var(--green); color: #000;
+  border: none; border-radius: 8px; padding: 0.65rem;
+  cursor: pointer; font-size: 0.85rem; font-weight: 700;
+  font-family: 'Syne', sans-serif; margin-top: 0.4rem;
+  transition: opacity 0.15s; display: none;
+}
+.drill-btn:hover { opacity: 0.85; }
+.drill-btn.visible { display: block; }
+
+/* ── MAP AREA ── */
+.map-area {
+  flex: 1; position: relative; overflow: hidden;
+  background: var(--ocean);
+}
+.map-area svg { width: 100%; height: 100%; cursor: grab; }
+.map-area svg:active { cursor: grabbing; }
+
+/* SVG country paths */
+.c-path {
+  fill: var(--land);
+  stroke: var(--stroke);
+  stroke-width: 0.6;
+  cursor: pointer;
+  transition: fill 0.15s;
+  vector-effect: non-scaling-stroke;
+}
+.c-path:hover { fill: var(--land-hover); }
+.c-path.sel { fill: var(--land-selected); stroke: var(--stroke-selected); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.c-path.correct { fill: var(--land-correct); stroke: var(--stroke-correct); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.c-path.incorrect { fill: var(--land-incorrect); stroke: var(--stroke-incorrect); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.c-path.pending { fill: var(--land-hover); }
+
+/* Label text on map */
+.c-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+  font-weight: 600;
+}
+.c-label.correct { fill: var(--green); }
+.c-label.incorrect { fill: var(--red); }
+.c-label.pending { fill: var(--muted); }
+
+/* ── RESULTS OVERLAY ── */
+.results-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 50; backdrop-filter: blur(4px);
+}
+.results-card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  max-width: 400px; width: 90%;
+  text-align: center;
+}
+.results-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+.results-title { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.3rem; }
+.results-score {
+  font-family: 'Syne', sans-serif;
+  font-size: 3.5rem; font-weight: 800;
+  margin: 0.5rem 0 0.2rem;
+}
+.results-score.great { color: var(--green); }
+.results-score.ok { color: var(--amber); }
+.results-score.poor { color: var(--red); }
+.results-pct { color: var(--muted); font-size: 0.9rem; }
+.results-msg { font-size: 0.85rem; color: var(--muted); margin-top: 0.7rem; line-height: 1.6; }
+.results-btns { display: flex; gap: 0.7rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap; }
+.r-btn {
+  padding: 0.6rem 1.2rem; border-radius: 9px;
+  border: 1px solid var(--border2); background: none;
+  color: var(--text); cursor: pointer; font-size: 0.85rem;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.r-btn:hover { background: var(--surface2); }
+.r-btn.primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-color: transparent; font-weight: 600;
+}
+
+/* ── DRILL-DOWN SCREEN ── */
+#drill-screen {
+  flex-direction: row;
+  background: var(--ocean);
+}
+.drill-sidebar {
+  width: 260px; min-width: 260px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  padding: 1rem; gap: 0.75rem;
+  overflow-y: auto; z-index: 10;
+}
+.drill-country-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.2rem; font-weight: 700;
+  margin-bottom: 0.1rem;
+}
+.drill-subtitle { font-size: 0.78rem; color: var(--muted); }
+.cities-list { display: flex; flex-direction: column; gap: 0.4rem; }
+.city-chip {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 7px; padding: 0.5rem 0.7rem;
+  font-size: 0.82rem; cursor: grab;
+  display: flex; align-items: center; gap: 0.5rem;
+  transition: all 0.15s; user-select: none;
+}
+.city-chip:active { cursor: grabbing; opacity: 0.7; }
+.city-chip.placed { opacity: 0.35; cursor: default; pointer-events: none; }
+.city-chip.correct-placed { opacity: 0.35; cursor: default; pointer-events: none; color: var(--green); border-color: rgba(34,197,94,0.3); }
+.city-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.drill-map-area { flex: 1; position: relative; overflow: hidden; background: var(--ocean); }
+.drill-map-area svg { width: 100%; height: 100%; }
+
+/* State paths */
+.s-path {
+  fill: var(--land);
+  stroke: var(--stroke);
+  stroke-width: 0.8;
+  cursor: pointer;
+  transition: fill 0.15s;
+  vector-effect: non-scaling-stroke;
+}
+.s-path:hover { fill: var(--land-hover); }
+.s-path.sel { fill: var(--land-selected); stroke: var(--stroke-selected); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.s-path.correct { fill: var(--land-correct); stroke: var(--stroke-correct); stroke-width: 1; }
+.s-path.incorrect { fill: var(--land-incorrect); stroke: var(--stroke-incorrect); stroke-width: 1; }
+
+/* City markers on drill map */
+.city-marker {
+  cursor: pointer;
+}
+.city-marker circle {
+  fill: var(--accent); stroke: #fff; stroke-width: 1.5;
+  transition: r 0.15s;
+}
+.city-marker text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9px; fill: var(--text);
+  text-anchor: middle;
+  pointer-events: none;
+}
+.city-marker.correct circle { fill: var(--green); }
+.city-marker.incorrect circle { fill: var(--red); }
+
+/* Drop zone overlay on map */
+.drop-overlay {
+  position: absolute; inset: 0;
+  pointer-events: none;
+}
+
+/* Loading */
+.loading-screen {
+  position: absolute; inset: 0;
+  background: var(--ocean);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 1rem; z-index: 100;
+}
+.loading-spinner {
+  width: 40px; height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { color: var(--muted); font-size: 0.9rem; }
+
+/* Tooltip */
+.map-tooltip {
+  position: absolute;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 7px;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.1s;
+  white-space: nowrap;
+  z-index: 20;
+}
+.map-tooltip.visible { opacity: 1; }
+
+@media (max-width: 700px) {
+  #map-screen, #drill-screen { flex-direction: column; }
+  .map-sidebar, .drill-sidebar { width: 100%; min-width: 0; max-height: 220px; border-right: none; border-bottom: 1px solid var(--border); }
+  .continent-grid { grid-template-columns: repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HOME ═══════════════ -->
+<div class="screen active" id="home">
+  <div class="home-inner">
+    <div class="home-eyebrow">Geography Learning</div>
+    <div class="home-title">GeoLearn</div>
+    <div class="home-sub">Master every country, state, and city on Earth</div>
+    <div class="mode-grid">
+      <div class="mode-card" onclick="goTo('continent-select')">
+        <div class="mode-icon">📍</div>
+        <div class="mode-label">Location</div>
+        <div class="mode-desc">Name countries on the map</div>
+      </div>
+      <div class="mode-card locked">
+        <div class="mode-badge">SOON</div>
+        <div class="mode-icon">🏳️</div>
+        <div class="mode-label">Flags</div>
+        <div class="mode-desc">Match flags to countries</div>
+      </div>
+      <div class="mode-card locked">
+        <div class="mode-badge">SOON</div>
+        <div class="mode-icon">🏛️</div>
+        <div class="mode-label">Capitals</div>
+        <div class="mode-desc">Match capitals to countries</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ CONTINENT SELECT ═══════════════ -->
+<div class="screen" id="continent-select" style="position:relative;">
+  <button class="back-btn" onclick="goTo('home')">← Back</button>
+  <div class="cs-header">
+    <div class="cs-title">Choose a Continent</div>
+    <div class="cs-sub">Select a region to begin the quiz</div>
+  </div>
+  <div class="continent-grid">
+    <div class="cont-card" onclick="loadContinent('europe')"><span class="cont-flag">🌍</span> Europe</div>
+    <div class="cont-card" onclick="loadContinent('north_america')"><span class="cont-flag">🌎</span> N. America</div>
+    <div class="cont-card" onclick="loadContinent('south_america')"><span class="cont-flag">🌎</span> S. America</div>
+    <div class="cont-card" onclick="loadContinent('asia')"><span class="cont-flag">🌏</span> Asia</div>
+    <div class="cont-card" onclick="loadContinent('africa')"><span class="cont-flag">🌍</span> Africa</div>
+    <div class="cont-card" onclick="loadContinent('oceania')"><span class="cont-flag">🌏</span> Oceania</div>
+  </div>
+</div>
+
+<!-- ═══════════════ MAP SCREEN ═══════════════ -->
+<div class="screen" id="map-screen">
+  <div class="map-sidebar">
+    <div>
+      <div class="sidebar-logo">GeoLearn</div>
+      <div class="sidebar-continent" id="sb-continent">Europe</div>
+    </div>
+    <hr class="sidebar-rule">
+    <div class="instr-box" id="sb-instr">
+      <strong>How to play:</strong> Click a country to select it, then type its name below. Fill as many as you can, then press <strong>Submit</strong>.
+    </div>
+    <div class="sel-box" id="sel-box" style="display:none;">
+      <div class="sel-box-label">Selected country</div>
+      <input class="country-inp" id="country-inp" type="text" maxlength="20" placeholder="Type country name…"
+        oninput="saveAnswer(this.value)" onkeydown="if(event.key==='Enter')submitAll()"/>
+      <div class="inp-hint">Max 20 chars · Enter to submit all</div>
+    </div>
+    <hr class="sidebar-rule">
+    <div class="zoom-row">
+      <div class="zoom-btn" onclick="zoomMap(1.3)" title="Zoom in">+</div>
+      <div class="zoom-btn" onclick="zoomMap(0.77)" title="Zoom out">−</div>
+      <div class="zoom-btn" onclick="resetMapView()" title="Reset" style="font-size:0.85rem;">⟳</div>
+    </div>
+    <div class="score-row">
+      <span id="sb-filled">0 / 0 filled</span>
+      <span class="score-correct" id="sb-correct" style="display:none;"></span>
+    </div>
+    <hr class="sidebar-rule">
+    <div class="drill-hint" id="drill-hint">
+      ✅ Select a <strong>green country</strong> on the map, then click "Zoom In" to explore its states &amp; cities.
+    </div>
+    <div class="drill-btn" id="drill-btn" onclick="startDrill()">🔍 Zoom In to Country</div>
+    <button class="submit-btn" onclick="submitAll()">✓ Submit Answers</button>
+    <button class="reset-btn" onclick="resetAll()">↺ Clear All Answers</button>
+    <button class="back-btn" style="position:static;margin-top:0.3rem;" onclick="goTo('continent-select')">← Back</button>
+  </div>
+  <div class="map-area" id="map-area">
+    <div class="loading-screen" id="map-loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading map data…</div>
+    </div>
+    <svg id="main-svg"></svg>
+    <div class="map-tooltip" id="map-tooltip"></div>
+    <div id="results-container"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ DRILL-DOWN SCREEN ═══════════════ -->
+<div class="screen" id="drill-screen">
+  <div class="drill-sidebar">
+    <div>
+      <div class="sidebar-logo">GeoLearn · Drill Down</div>
+      <div class="drill-country-name" id="drill-country-name">United Kingdom</div>
+      <div class="drill-subtitle" id="drill-subtitle">Name the regions, then place the cities</div>
+    </div>
+    <hr class="sidebar-rule">
+    <div class="instr-box" id="drill-instr">Click a region to name it. After submitting, drag cities from this list onto their correct location on the map.</div>
+    <div class="sel-box" id="drill-sel-box" style="display:none;">
+      <div class="sel-box-label">Selected region</div>
+      <input class="country-inp" id="drill-inp" type="text" maxlength="20" placeholder="Type region name…"
+        oninput="saveDrillAnswer(this.value)" onkeydown="if(event.key==='Enter')submitDrill()"/>
+      <div class="inp-hint">Max 20 chars · Enter to submit all</div>
+    </div>
+    <hr class="sidebar-rule">
+    <div id="cities-section" style="display:none;">
+      <div style="font-size:0.72rem;color:var(--accent);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:0.5rem;">Drag cities to the map</div>
+      <div class="cities-list" id="cities-list"></div>
+    </div>
+    <div class="zoom-row" style="margin-top:auto;">
+      <div class="zoom-btn" onclick="zoomDrill(1.3)">+</div>
+      <div class="zoom-btn" onclick="zoomDrill(0.77)">−</div>
+      <div class="zoom-btn" onclick="resetDrillView()" style="font-size:0.85rem;">⟳</div>
+    </div>
+    <div class="score-row">
+      <span id="drill-score">0 / 0 regions</span>
+    </div>
+    <hr class="sidebar-rule">
+    <button class="submit-btn" id="drill-submit-btn" onclick="submitDrill()">✓ Submit Regions</button>
+    <button class="reset-btn" onclick="resetDrill()">↺ Clear</button>
+    <button class="back-btn" style="position:static;margin-top:0.3rem;" onclick="backToMap()">← Back to Map</button>
+  </div>
+  <div class="drill-map-area" id="drill-map-area">
+    <svg id="drill-svg"></svg>
+    <div class="map-tooltip" id="drill-tooltip"></div>
+    <div id="drill-results-container"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// COUNTRY DATA — ISO codes, display names, continent membership
+// ═══════════════════════════════════════════
+const CONTINENT_COUNTRIES = {
+  europe: ['ALB','AND','AUT','BEL','BIH','BGR','BLR','CHE','CYP','CZE','DEU','DNK','ESP','EST','FIN','FRA','GBR','GRC','HRV','HUN','IRL','ISL','ITA','KOS','LIE','LTU','LUX','LVA','MDA','MKD','MLT','MNE','NLD','NOR','POL','PRT','ROU','RUS','SRB','SVK','SVN','SWE','TUR','UKR','VAT','XKX'],
+  north_america: ['ATG','BHS','BLZ','BRB','CAN','CRI','CUB','DMA','DOM','GRD','GTM','HND','HTI','JAM','KNA','LCA','MEX','NIC','PAN','PRY','SLV','TTO','USA','VCT'],
+  south_america: ['ARG','BOL','BRA','CHL','COL','ECU','GUY','PER','PRY','SUR','URY','VEN'],
+  asia: ['AFG','ARM','AZE','BGD','BHR','BRN','BTN','CHN','GEO','IDN','IND','IRN','IRQ','ISR','JOR','JPN','KAZ','KGZ','KHM','KOR','KWT','LAO','LBN','LKA','MDV','MMR','MNG','MYS','NPL','OMN','PAK','PHL','PRK','PSE','QAT','SAU','SGP','SYR','TJK','TKM','TLS','TUR','TWN','UZB','VNM','YEM'],
+  africa: ['AGO','BDI','BEN','BFA','BWA','CAF','CIV','CMR','COD','COG','COM','CPV','DJI','DZA','EGY','ERI','ETH','GAB','GHA','GIN','GMB','GNB','GNQ','KEN','LBR','LBY','LSO','MAR','MDG','MLI','MOZ','MRT','MUS','MWI','NAM','NER','NGA','RWA','SDN','SEN','SLE','SOM','SSD','STP','SWZ','SYC','TCD','TGO','TUN','TZA','UGA','ZAF','ZMB','ZWE'],
+  oceania: ['AUS','FJI','FSM','KIR','MHL','NRU','NZL','PLW','PNG','SLB','TON','TUV','VUT','WSM']
+};
+
+const COUNTRY_NAMES = {
+  'ALB':'Albania','AND':'Andorra','AUT':'Austria','BEL':'Belgium','BIH':'Bosnia and Herzegovina',
+  'BGR':'Bulgaria','BLR':'Belarus','CHE':'Switzerland','CYP':'Cyprus','CZE':'Czechia',
+  'DEU':'Germany','DNK':'Denmark','ESP':'Spain','EST':'Estonia','FIN':'Finland',
+  'FRA':'France','GBR':'United Kingdom','GRC':'Greece','HRV':'Croatia','HUN':'Hungary',
+  'IRL':'Ireland','ISL':'Iceland','ITA':'Italy','LIE':'Liechtenstein','LTU':'Lithuania',
+  'LUX':'Luxembourg','LVA':'Latvia','MDA':'Moldova','MKD':'North Macedonia','MLT':'Malta',
+  'MNE':'Montenegro','NLD':'Netherlands','NOR':'Norway','POL':'Poland','PRT':'Portugal',
+  'ROU':'Romania','RUS':'Russia','SRB':'Serbia','SVK':'Slovakia','SVN':'Slovenia',
+  'SWE':'Sweden','TUR':'Turkey','UKR':'Ukraine','VAT':'Vatican','XKX':'Kosovo',
+  'ATG':'Antigua and Barbuda','BHS':'Bahamas','BLZ':'Belize','BRB':'Barbados',
+  'CAN':'Canada','CRI':'Costa Rica','CUB':'Cuba','DMA':'Dominica','DOM':'Dominican Republic',
+  'GRD':'Grenada','GTM':'Guatemala','HND':'Honduras','HTI':'Haiti','JAM':'Jamaica',
+  'KNA':'Saint Kitts and Nevis','LCA':'Saint Lucia','MEX':'Mexico','NIC':'Nicaragua',
+  'PAN':'Panama','SLV':'El Salvador','TTO':'Trinidad and Tobago','USA':'United States','VCT':'Saint Vincent and the Grenadines',
+  'ARG':'Argentina','BOL':'Bolivia','BRA':'Brazil','CHL':'Chile','COL':'Colombia',
+  'ECU':'Ecuador','GUY':'Guyana','PER':'Peru','PRY':'Paraguay','SUR':'Suriname',
+  'URY':'Uruguay','VEN':'Venezuela',
+  'AFG':'Afghanistan','ARM':'Armenia','AZE':'Azerbaijan','BGD':'Bangladesh','BHR':'Bahrain',
+  'BRN':'Brunei','BTN':'Bhutan','CHN':'China','GEO':'Georgia','IDN':'Indonesia',
+  'IND':'India','IRN':'Iran','IRQ':'Iraq','ISR':'Israel','JOR':'Jordan',
+  'JPN':'Japan','KAZ':'Kazakhstan','KGZ':'Kyrgyzstan','KHM':'Cambodia','KOR':'South Korea',
+  'KWT':'Kuwait','LAO':'Laos','LBN':'Lebanon','LKA':'Sri Lanka','MDV':'Maldives',
+  'MMR':'Myanmar','MNG':'Mongolia','MYS':'Malaysia','NPL':'Nepal','OMN':'Oman',
+  'PAK':'Pakistan','PHL':'Philippines','PRK':'North Korea','PSE':'Palestine','QAT':'Qatar',
+  'SAU':'Saudi Arabia','SGP':'Singapore','SYR':'Syria','TJK':'Tajikistan','TKM':'Turkmenistan',
+  'TLS':'Timor-Leste','TWN':'Taiwan','UZB':'Uzbekistan','VNM':'Vietnam','YEM':'Yemen',
+  'AGO':'Angola','BDI':'Burundi','BEN':'Benin','BFA':'Burkina Faso','BWA':'Botswana',
+  'CAF':'Central African Republic','CIV':"Côte d'Ivoire",'CMR':'Cameroon','COD':'DR Congo',
+  'COG':'Congo','COM':'Comoros','CPV':'Cape Verde','DJI':'Djibouti','DZA':'Algeria',
+  'EGY':'Egypt','ERI':'Eritrea','ETH':'Ethiopia','GAB':'Gabon','GHA':'Ghana',
+  'GIN':'Guinea','GMB':'Gambia','GNB':'Guinea-Bissau','GNQ':'Equatorial Guinea',
+  'KEN':'Kenya','LBR':'Liberia','LBY':'Libya','LSO':'Lesotho','MAR':'Morocco',
+  'MDG':'Madagascar','MLI':'Mali','MOZ':'Mozambique','MRT':'Mauritania','MUS':'Mauritius',
+  'MWI':'Malawi','NAM':'Namibia','NER':'Niger','NGA':'Nigeria','RWA':'Rwanda',
+  'SDN':'Sudan','SEN':'Senegal','SLE':'Sierra Leone','SOM':'Somalia','SSD':'South Sudan',
+  'STP':'São Tomé and Príncipe','SWZ':'Eswatini','SYC':'Seychelles','TCD':'Chad',
+  'TGO':'Togo','TUN':'Tunisia','TZA':'Tanzania','UGA':'Uganda','ZAF':'South Africa',
+  'ZMB':'Zambia','ZWE':'Zimbabwe',
+  'AUS':'Australia','FJI':'Fiji','FSM':'Micronesia','KIR':'Kiribati','MHL':'Marshall Islands',
+  'NRU':'Nauru','NZL':'New Zealand','PLW':'Palau','PNG':'Papua New Guinea',
+  'SLB':'Solomon Islands','TON':'Tonga','TUV':'Tuvalu','VUT':'Vanuatu','WSM':'Samoa'
+};
+
+// Accepted alternative spellings
+const ALIASES = {
+  'GBR': ['uk', 'britain', 'great britain', 'england'],
+  'USA': ['us', 'america', 'united states of america'],
+  'CZE': ['czech republic', 'czechia'],
+  'MKD': ['north macedonia', 'macedonia'],
+  'XKX': ['kosovo'],
+  'TUR': ['turkey', 'türkiye'],
+  'COD': ['democratic republic of congo', 'dr congo', 'drc', 'zaire'],
+  'PRK': ['north korea'],
+  'KOR': ['south korea'],
+  'VNM': ['vietnam'],
+  'MNG': ['mongolia'],
+  'IRN': ['iran'],
+  'SYR': ['syria'],
+  'PSE': ['palestine', 'palestinian territories'],
+  'TWN': ['taiwan'],
+};
+
+// ═══════════════════════════════════════════
+// DRILL-DOWN DATA — states + cities per country
+// ═══════════════════════════════════════════
+const DRILL_DATA = {
+  'GBR': {
+    states: [
+      { id: 'ENG', name: 'England' },
+      { id: 'SCT', name: 'Scotland' },
+      { id: 'WLS', name: 'Wales' },
+      { id: 'NIR', name: 'Northern Ireland' }
+    ],
+    cities: ['London','Edinburgh','Cardiff','Belfast','Manchester','Birmingham','Liverpool','Glasgow']
+  },
+  'USA': {
+    states: [
+      {id:'AL',name:'Alabama'},{id:'AK',name:'Alaska'},{id:'AZ',name:'Arizona'},{id:'AR',name:'Arkansas'},
+      {id:'CA',name:'California'},{id:'CO',name:'Colorado'},{id:'CT',name:'Connecticut'},{id:'DE',name:'Delaware'},
+      {id:'FL',name:'Florida'},{id:'GA',name:'Georgia'},{id:'HI',name:'Hawaii'},{id:'ID',name:'Idaho'},
+      {id:'IL',name:'Illinois'},{id:'IN',name:'Indiana'},{id:'IA',name:'Iowa'},{id:'KS',name:'Kansas'},
+      {id:'KY',name:'Kentucky'},{id:'LA',name:'Louisiana'},{id:'ME',name:'Maine'},{id:'MD',name:'Maryland'},
+      {id:'MA',name:'Massachusetts'},{id:'MI',name:'Michigan'},{id:'MN',name:'Minnesota'},{id:'MS',name:'Mississippi'},
+      {id:'MO',name:'Missouri'},{id:'MT',name:'Montana'},{id:'NE',name:'Nebraska'},{id:'NV',name:'Nevada'},
+      {id:'NH',name:'New Hampshire'},{id:'NJ',name:'New Jersey'},{id:'NM',name:'New Mexico'},{id:'NY',name:'New York'},
+      {id:'NC',name:'North Carolina'},{id:'ND',name:'North Dakota'},{id:'OH',name:'Ohio'},{id:'OK',name:'Oklahoma'},
+      {id:'OR',name:'Oregon'},{id:'PA',name:'Pennsylvania'},{id:'RI',name:'Rhode Island'},{id:'SC',name:'South Carolina'},
+      {id:'SD',name:'South Dakota'},{id:'TN',name:'Tennessee'},{id:'TX',name:'Texas'},{id:'UT',name:'Utah'},
+      {id:'VT',name:'Vermont'},{id:'VA',name:'Virginia'},{id:'WA',name:'Washington'},{id:'WV',name:'West Virginia'},
+      {id:'WI',name:'Wisconsin'},{id:'WY',name:'Wyoming'}
+    ],
+    cities: ['New York','Los Angeles','Chicago','Houston','Phoenix','Philadelphia','San Antonio','San Diego','Dallas','San Jose','Washington DC','Seattle','Denver','Boston','Atlanta']
+  },
+  'DEU': {
+    states: [
+      {id:'BB',name:'Brandenburg'},{id:'BE',name:'Berlin'},{id:'BW',name:'Baden-Württemberg'},
+      {id:'BY',name:'Bavaria'},{id:'HB',name:'Bremen'},{id:'HE',name:'Hesse'},
+      {id:'HH',name:'Hamburg'},{id:'MV',name:'Mecklenburg-Vorpommern'},{id:'NI',name:'Lower Saxony'},
+      {id:'NW',name:'North Rhine-Westphalia'},{id:'RP',name:'Rhineland-Palatinate'},
+      {id:'SH',name:'Schleswig-Holstein'},{id:'SL',name:'Saarland'},
+      {id:'SN',name:'Saxony'},{id:'ST',name:'Saxony-Anhalt'},{id:'TH',name:'Thuringia'}
+    ],
+    cities: ['Berlin','Hamburg','Munich','Cologne','Frankfurt','Stuttgart','Düsseldorf','Leipzig','Dortmund','Essen']
+  },
+  'FRA': {
+    states: [
+      {id:'ARA',name:'Auvergne-Rhône-Alpes'},{id:'BFC',name:'Bourgogne-Franche-Comté'},
+      {id:'BRE',name:'Brittany'},{id:'CVL',name:'Centre-Val de Loire'},{id:'COR',name:'Corsica'},
+      {id:'GES',name:'Grand Est'},{id:'HDF',name:'Hauts-de-France'},
+      {id:'IDF',name:'Île-de-France'},{id:'NOR',name:'Normandy'},
+      {id:'NAQ',name:'Nouvelle-Aquitaine'},{id:'OCC',name:'Occitanie'},
+      {id:'PDL',name:'Pays de la Loire'},{id:'PAC',name:"Provence-Alpes-Côte d'Azur"}
+    ],
+    cities: ['Paris','Marseille','Lyon','Toulouse','Nice','Nantes','Strasbourg','Montpellier','Bordeaux','Lille']
+  },
+  'AUS': {
+    states: [
+      {id:'NSW',name:'New South Wales'},{id:'VIC',name:'Victoria'},{id:'QLD',name:'Queensland'},
+      {id:'WA',name:'Western Australia'},{id:'SA',name:'South Australia'},
+      {id:'TAS',name:'Tasmania'},{id:'ACT',name:'Australian Capital Territory'},
+      {id:'NT',name:'Northern Territory'}
+    ],
+    cities: ['Sydney','Melbourne','Brisbane','Perth','Adelaide','Gold Coast','Canberra','Hobart','Darwin','Newcastle']
+  },
+  'BRA': {
+    states: [
+      {id:'AC',name:'Acre'},{id:'AL',name:'Alagoas'},{id:'AP',name:'Amapá'},
+      {id:'AM',name:'Amazonas'},{id:'BA',name:'Bahia'},{id:'CE',name:'Ceará'},
+      {id:'DF',name:'Federal District'},{id:'ES',name:'Espírito Santo'},{id:'GO',name:'Goiás'},
+      {id:'MA',name:'Maranhão'},{id:'MT',name:'Mato Grosso'},{id:'MS',name:'Mato Grosso do Sul'},
+      {id:'MG',name:'Minas Gerais'},{id:'PA',name:'Pará'},{id:'PB',name:'Paraíba'},
+      {id:'PR',name:'Paraná'},{id:'PE',name:'Pernambuco'},{id:'PI',name:'Piauí'},
+      {id:'RJ',name:'Rio de Janeiro'},{id:'RN',name:'Rio Grande do Norte'},
+      {id:'RS',name:'Rio Grande do Sul'},{id:'RO',name:'Rondônia'},{id:'RR',name:'Roraima'},
+      {id:'SC',name:'Santa Catarina'},{id:'SP',name:'São Paulo'},{id:'SE',name:'Sergipe'},{id:'TO',name:'Tocantins'}
+    ],
+    cities: ['São Paulo','Rio de Janeiro','Brasília','Salvador','Fortaleza','Belo Horizonte','Manaus','Curitiba','Recife','Porto Alegre']
+  },
+  'CHN': {
+    states: [],
+    cities: ['Beijing','Shanghai','Guangzhou','Shenzhen','Chengdu','Nanjing','Wuhan','Xi\'an','Hangzhou','Tianjin']
+  },
+  'IND': {
+    states: [],
+    cities: ['Mumbai','Delhi','Bangalore','Hyderabad','Chennai','Kolkata','Pune','Ahmedabad','Jaipur','Surat']
+  },
+  'CAN': {
+    states: [
+      {id:'AB',name:'Alberta'},{id:'BC',name:'British Columbia'},{id:'MB',name:'Manitoba'},
+      {id:'NB',name:'New Brunswick'},{id:'NL',name:'Newfoundland and Labrador'},
+      {id:'NS',name:'Nova Scotia'},{id:'NT',name:'Northwest Territories'},
+      {id:'NU',name:'Nunavut'},{id:'ON',name:'Ontario'},{id:'PE',name:'Prince Edward Island'},
+      {id:'QC',name:'Quebec'},{id:'SK',name:'Saskatchewan'},{id:'YT',name:'Yukon'}
+    ],
+    cities: ['Toronto','Montreal','Vancouver','Calgary','Edmonton','Ottawa','Winnipeg','Quebec City','Hamilton','Kitchener']
+  },
+  'MEX': {
+    states: [],
+    cities: ['Mexico City','Guadalajara','Monterrey','Puebla','Tijuana','León','Juárez','Zapopan','Mérida','San Luis Potosí']
+  },
+  'ARG': {
+    states: [],
+    cities: ['Buenos Aires','Córdoba','Rosario','Mendoza','Tucumán','La Plata','Mar del Plata','Salta','Santa Fe','San Juan']
+  }
+};
+
+// ═══════════════════════════════════════════
+// PROJECTION SETTINGS per continent
+// ═══════════════════════════════════════════
+const CONTINENT_PROJ = {
+  europe: { type:'mercator', center:[15,54], scale:600 },
+  north_america: { type:'mercator', center:[-95,50], scale:280 },
+  south_america: { type:'mercator', center:[-58,-15], scale:320 },
+  asia: { type:'mercator', center:[90,40], scale:200 },
+  africa: { type:'mercator', center:[20,0], scale:280 },
+  oceania: { type:'mercator', center:[140,-25], scale:280 }
+};
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let geoData = null;
+let currentContinent = null;
+let countryFeatures = [];
+let answers = {};
+let submitted = false;
+let selectedId = null;
+let drillCountryId = null;
+let drillAnswers = {};
+let drillSubmitted = false;
+let drillSelected = null;
+let cityPlacements = {}; // cityName -> {x,y}
+let citySubmitted = false;
+
+// D3 zoom behaviours
+let mapZoom = null;
+let drillZoom = null;
+let currentMapTransform = d3.zoomIdentity;
+let currentDrillTransform = d3.zoomIdentity;
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function backToMap() {
+  goTo('map-screen');
+}
+
+// ═══════════════════════════════════════════
+// LOAD WORLD TOPOJSON
+// ═══════════════════════════════════════════
+async function loadGeoData() {
+  if (geoData) return geoData;
+  const res = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
+  geoData = await res.json();
+  return geoData;
+}
+
+// ═══════════════════════════════════════════
+// LOAD CONTINENT MAP
+// ═══════════════════════════════════════════
+async function loadContinent(continent) {
+  currentContinent = continent;
+  answers = {};
+  submitted = false;
+  selectedId = null;
+
+  goTo('map-screen');
+  document.getElementById('map-loading').style.display = 'flex';
+  document.getElementById('sb-continent').textContent = continent.replace('_',' ').replace(/\b\w/g,c=>c.toUpperCase());
+  document.getElementById('sel-box').style.display = 'none';
+  document.getElementById('drill-hint').classList.remove('visible');
+  document.getElementById('drill-btn').classList.remove('visible');
+  document.getElementById('sb-correct').style.display = 'none';
+  document.getElementById('results-container').innerHTML = '';
+
+  try {
+    const world = await loadGeoData();
+    const validISOs = CONTINENT_COUNTRIES[continent] || [];
+    const isoNum = buildISO3toNum(world);
+    const numSet = new Set(validISOs.map(iso3 => isoNum[iso3]).filter(Boolean));
+
+    const allCountries = topojson.feature(world, world.objects.countries).features;
+    countryFeatures = allCountries.filter(f => numSet.has(String(f.id)));
+
+    drawMap();
+  } catch(e) {
+    document.getElementById('map-loading').innerHTML = '<div style="color:var(--red);text-align:center;padding:2rem;">Failed to load map data.<br>Check your internet connection.</div>';
+  }
+}
+
+// ISO3 to TopoJSON numeric ID mapping (world-atlas uses numeric ISO 3166-1)
+function buildISO3toNum(world) {
+  // world-atlas 110m uses numeric IDs matching ISO 3166-1 numeric
+  const map = {};
+  const iso3toNum = {
+    'AFG':'4','ALB':'8','DZA':'12','AND':'20','AGO':'24','ARG':'32','ARM':'51','AUS':'36','AUT':'40',
+    'AZE':'31','BHS':'44','BHR':'48','BGD':'50','BRB':'52','BLR':'112','BEL':'56','BLZ':'84',
+    'BEN':'204','BTN':'64','BOL':'68','BIH':'70','BWA':'72','BRA':'76','BRN':'96','BGR':'100',
+    'BFA':'854','BDI':'108','CPV':'132','KHM':'116','CMR':'120','CAN':'124','CAF':'140','TCD':'148',
+    'CHL':'152','CHN':'156','COL':'170','COM':'174','COG':'178','COD':'180','CRI':'188','CIV':'384',
+    'HRV':'191','CUB':'192','CYP':'196','CZE':'203','DNK':'208','DJI':'262','DMA':'212','DOM':'214',
+    'ECU':'218','EGY':'818','SLV':'222','GNQ':'226','ERI':'232','EST':'233','ETH':'231','FJI':'242',
+    'FIN':'246','FRA':'250','GAB':'266','GMB':'270','GEO':'268','DEU':'276','GHA':'288','GRC':'300',
+    'GRD':'308','GTM':'320','GIN':'324','GNB':'624','GUY':'328','HTI':'332','HND':'340','HUN':'348',
+    'ISL':'352','IND':'356','IDN':'360','IRN':'364','IRQ':'368','IRL':'372','ISR':'376','ITA':'380',
+    'JAM':'388','JPN':'392','JOR':'400','KAZ':'398','KEN':'404','KIR':'296','PRK':'408','KOR':'410',
+    'KWT':'414','KGZ':'417','LAO':'418','LVA':'428','LBN':'422','LSO':'426','LBR':'430','LBY':'434',
+    'LIE':'438','LTU':'440','LUX':'442','MDG':'450','MWI':'454','MYS':'458','MDV':'462','MLI':'466',
+    'MLT':'470','MHL':'584','MRT':'478','MUS':'480','MEX':'484','FSM':'583','MDA':'498','MNG':'496',
+    'MNE':'499','MAR':'504','MOZ':'508','MMR':'104','NAM':'516','NRU':'520','NPL':'524','NLD':'528',
+    'NZL':'554','NIC':'558','NER':'562','NGA':'566','NOR':'578','OMN':'512','PAK':'586','PLW':'585',
+    'PSE':'275','PAN':'591','PNG':'598','PRY':'600','PER':'604','PHL':'608','POL':'616','PRT':'620',
+    'QAT':'634','ROU':'642','RUS':'643','RWA':'646','KNA':'659','LCA':'662','VCT':'670',
+    'WSM':'882','STP':'678','SAU':'682','SEN':'686','SRB':'688','SYC':'690','SLE':'694','SGP':'702',
+    'SVK':'703','SVN':'705','SLB':'090','SOM':'706','ZAF':'710','SSD':'728','ESP':'724','LKA':'144',
+    'SDN':'729','SUR':'740','SWZ':'748','SWE':'752','CHE':'756','SYR':'760','TWN':'158','TJK':'762',
+    'TZA':'834','THA':'764','TLS':'626','TGO':'768','TON':'776','TTO':'780','TUN':'788','TKM':'795',
+    'TUV':'798','UGA':'800','UKR':'804','ARE':'784','GBR':'826','USA':'840','URY':'858','UZB':'860',
+    'VUT':'548','VEN':'862','VNM':'704','YEM':'887','ZMB':'894','ZWE':'716',
+    'XKX':'983','KOS':'983'
+  };
+  return iso3toNum;
+}
+
+function isoToName(id) {
+  // id is numeric from topojson
+  const num2iso3 = buildNum2ISO3();
+  const iso3 = num2iso3[String(id)];
+  return iso3 ? { iso3, name: COUNTRY_NAMES[iso3] || null } : null;
+}
+
+let _num2iso3 = null;
+function buildNum2ISO3() {
+  if (_num2iso3) return _num2iso3;
+  const iso3toNum = buildISO3toNum();
+  _num2iso3 = {};
+  for (const [iso3, num] of Object.entries(iso3toNum)) {
+    _num2iso3[num] = iso3;
+  }
+  return _num2iso3;
+}
+
+// ═══════════════════════════════════════════
+// DRAW CONTINENT MAP
+// ═══════════════════════════════════════════
+function drawMap() {
+  const svg = d3.select('#main-svg');
+  svg.selectAll('*').remove();
+
+  const area = document.getElementById('map-area');
+  const W = area.clientWidth, H = area.clientHeight;
+  svg.attr('viewBox', `0 0 ${W} ${H}`);
+
+  const cfg = CONTINENT_PROJ[currentContinent];
+  const proj = d3.geoMercator()
+    .center(cfg.center)
+    .scale(cfg.scale * (Math.min(W, H) / 600))
+    .translate([W/2, H/2]);
+
+  const path = d3.geoPath().projection(proj);
+  const g = svg.append('g').attr('id', 'map-g');
+
+  // Draw countries
+  countryFeatures.forEach(feature => {
+    const info = isoToName(feature.id);
+    if (!info || !info.name) return;
+    const { iso3, name } = info;
+
+    const cls = getCountryClass(iso3);
+    g.append('path')
+      .datum(feature)
+      .attr('class', `c-path ${cls}`)
+      .attr('id', `cp-${iso3}`)
+      .attr('d', path)
+      .on('click', () => selectCountry(iso3))
+      .on('mouseover', function(event) {
+        if (!submitted) {
+          const tt = document.getElementById('map-tooltip');
+          tt.textContent = answers[iso3] ? `${answers[iso3]}` : 'Click to name';
+          tt.classList.add('visible');
+        }
+      })
+      .on('mousemove', function(event) {
+        const tt = document.getElementById('map-tooltip');
+        const rect = area.getBoundingClientRect();
+        tt.style.left = (event.clientX - rect.left + 12) + 'px';
+        tt.style.top = (event.clientY - rect.top - 28) + 'px';
+      })
+      .on('mouseleave', function() {
+        document.getElementById('map-tooltip').classList.remove('visible');
+      });
+
+    // Labels after submit
+    if (submitted) {
+      try {
+        const centroid = path.centroid(feature);
+        if (centroid && !isNaN(centroid[0])) {
+          const ans = answers[iso3] || '';
+          const correct = isCorrect(iso3, ans);
+          const labelClass = ans ? (correct ? 'correct' : 'incorrect') : 'pending';
+          const icon = ans ? (correct ? ' ✓' : ' ✗') : '';
+          const display = (ans || '').slice(0, 13);
+          g.append('text')
+            .attr('class', `c-label ${labelClass}`)
+            .attr('x', centroid[0])
+            .attr('y', centroid[1])
+            .text(display + icon);
+        }
+      } catch(e) {}
+    }
+  });
+
+  // Setup zoom & pan
+  mapZoom = d3.zoom()
+    .scaleExtent([0.5, 12])
+    .on('zoom', (event) => {
+      currentMapTransform = event.transform;
+      g.attr('transform', event.transform);
+    });
+  svg.call(mapZoom);
+  svg.call(mapZoom.transform, currentMapTransform);
+
+  document.getElementById('map-loading').style.display = 'none';
+  updateScorebar();
+}
+
+// ═══════════════════════════════════════════
+// COUNTRY INTERACTION
+// ═══════════════════════════════════════════
+function getCountryClass(iso3) {
+  if (!submitted) return selectedId === iso3 ? 'sel' : '';
+  const ans = answers[iso3] || '';
+  if (!ans) return '';
+  return isCorrect(iso3, ans) ? 'correct' : 'incorrect';
+}
+
+function isCorrect(iso3, answer) {
+  if (!answer) return false;
+  const a = answer.trim().toLowerCase();
+  const official = (COUNTRY_NAMES[iso3] || '').toLowerCase();
+  if (a === official) return true;
+  const aliases = ALIASES[iso3] || [];
+  return aliases.includes(a);
+}
+
+function selectCountry(iso3) {
+  if (submitted) {
+    // After submit: allow selecting correct countries for drill-down
+    const ans = answers[iso3] || '';
+    if (isCorrect(iso3, ans)) {
+      drillCountryId = iso3;
+      const drillData = DRILL_DATA[iso3];
+      document.getElementById('drill-btn').classList.toggle('visible', !!drillData);
+      document.getElementById('drill-hint').classList.add('visible');
+      // Highlight selected
+      d3.selectAll('.c-path').classed('sel', false);
+      d3.select(`#cp-${iso3}`).classed('sel', true);
+    }
+    return;
+  }
+
+  selectedId = iso3;
+  // Update path classes
+  d3.selectAll('.c-path').each(function() {
+    const id = this.id.replace('cp-', '');
+    d3.select(this).attr('class', `c-path ${getCountryClass(id)}`);
+  });
+
+  const box = document.getElementById('sel-box');
+  box.style.display = 'block';
+  const inp = document.getElementById('country-inp');
+  inp.value = answers[iso3] || '';
+  inp.setAttribute('data-id', iso3);
+  setTimeout(() => inp.focus(), 50);
+  updateScorebar();
+}
+
+function saveAnswer(val) {
+  const id = document.getElementById('country-inp').getAttribute('data-id');
+  if (id) {
+    answers[id] = val;
+    // live color feedback on path
+    if (!submitted) {
+      // mark as pending
+      const el = document.getElementById(`cp-${id}`);
+      if (el && val.trim()) el.classList.add('pending');
+      else if (el) el.classList.remove('pending');
+    }
+  }
+  updateScorebar();
+}
+
+function updateScorebar() {
+  const total = countryFeatures.filter(f => {
+    const info = isoToName(f.id);
+    return info && info.name;
+  }).length;
+  const filled = Object.values(answers).filter(v => v.trim()).length;
+  document.getElementById('sb-filled').textContent = `${filled} / ${total} filled`;
+  if (submitted) {
+    const correct = countryFeatures.filter(f => {
+      const info = isoToName(f.id);
+      if (!info) return false;
+      return isCorrect(info.iso3, answers[info.iso3] || '');
+    }).length;
+    const sb = document.getElementById('sb-correct');
+    sb.textContent = `${correct} correct`;
+    sb.style.display = 'inline';
+  }
+}
+
+function submitAll() {
+  submitted = true;
+  selectedId = null;
+  document.getElementById('sel-box').style.display = 'none';
+
+  const total = countryFeatures.filter(f => {
+    const info = isoToName(f.id);
+    return info && info.name;
+  }).length;
+  const correct = countryFeatures.filter(f => {
+    const info = isoToName(f.id);
+    if (!info) return false;
+    return isCorrect(info.iso3, answers[info.iso3] || '');
+  }).length;
+
+  // Redraw with results
+  drawMap();
+
+  // Show drill hint
+  document.getElementById('drill-hint').classList.add('visible');
+
+  // Show results card
+  const pct = Math.round(correct / total * 100);
+  const emoji = pct === 100 ? '🎉' : pct >= 75 ? '🌟' : pct >= 50 ? '👍' : '📚';
+  const scoreClass = pct >= 75 ? 'great' : pct >= 50 ? 'ok' : 'poor';
+  const msg = pct === 100 ? 'Perfect! You know every country!' :
+              pct >= 75 ? 'Excellent work! Click a green country to explore its regions.' :
+              pct >= 50 ? 'Good effort — keep practicing! Click green countries to drill down.' :
+              'Keep studying the map — you\'ll get there!';
+
+  document.getElementById('results-container').innerHTML = `
+    <div class="results-overlay" onclick="this.style.display='none'">
+      <div class="results-card" onclick="event.stopPropagation()">
+        <div class="results-emoji">${emoji}</div>
+        <div class="results-title">Results — ${document.getElementById('sb-continent').textContent}</div>
+        <div class="results-score ${scoreClass}">${correct}/${total}</div>
+        <div class="results-pct">${pct}% correct</div>
+        <div class="results-msg">${msg}</div>
+        <div class="results-btns">
+          <button class="r-btn" onclick="this.closest('.results-overlay').style.display='none'">Review Map</button>
+          <button class="r-btn" onclick="resetAll()">Try Again</button>
+          <button class="r-btn primary" onclick="goTo('continent-select')">New Continent</button>
+        </div>
+      </div>
+    </div>`;
+
+  updateScorebar();
+}
+
+function resetAll() {
+  submitted = false;
+  answers = {};
+  selectedId = null;
+  drillCountryId = null;
+  document.getElementById('sel-box').style.display = 'none';
+  document.getElementById('results-container').innerHTML = '';
+  document.getElementById('drill-hint').classList.remove('visible');
+  document.getElementById('drill-btn').classList.remove('visible');
+  document.getElementById('sb-correct').style.display = 'none';
+  drawMap();
+  updateScorebar();
+}
+
+// ═══════════════════════════════════════════
+// ZOOM CONTROLS (continent map)
+// ═══════════════════════════════════════════
+function zoomMap(factor) {
+  const svg = d3.select('#main-svg');
+  if (mapZoom) svg.transition().duration(250).call(mapZoom.scaleBy, factor);
+}
+function resetMapView() {
+  currentMapTransform = d3.zoomIdentity;
+  const svg = d3.select('#main-svg');
+  if (mapZoom) svg.transition().duration(300).call(mapZoom.transform, d3.zoomIdentity);
+}
+
+// ═══════════════════════════════════════════
+// DRILL-DOWN
+// ═══════════════════════════════════════════
+function startDrill() {
+  if (!drillCountryId) return;
+  const data = DRILL_DATA[drillCountryId];
+  if (!data) return;
+
+  drillAnswers = {};
+  drillSubmitted = false;
+  drillSelected = null;
+  cityPlacements = {};
+  citySubmitted = false;
+
+  goTo('drill-screen');
+
+  const name = COUNTRY_NAMES[drillCountryId] || drillCountryId;
+  document.getElementById('drill-country-name').textContent = name;
+  document.getElementById('drill-sel-box').style.display = 'none';
+  document.getElementById('drill-results-container').innerHTML = '';
+
+  const hasStates = data.states && data.states.length > 0;
+  document.getElementById('drill-subtitle').textContent =
+    hasStates ? 'Name the regions, then place the cities' : 'Place the cities on the map';
+  document.getElementById('drill-submit-btn').textContent =
+    hasStates ? '✓ Submit Regions' : '✓ Submit Cities';
+
+  // Cities list
+  const citiesSection = document.getElementById('cities-section');
+  const citiesList = document.getElementById('cities-list');
+  citiesList.innerHTML = '';
+
+  if (!hasStates) {
+    citiesSection.style.display = 'block';
+  } else {
+    citiesSection.style.display = 'none';
+  }
+
+  (data.cities || []).forEach(city => {
+    const chip = document.createElement('div');
+    chip.className = 'city-chip';
+    chip.draggable = true;
+    chip.dataset.city = city;
+    chip.innerHTML = `<span class="city-dot"></span>${city}`;
+    chip.addEventListener('dragstart', onCityDragStart);
+    citiesList.appendChild(chip);
+  });
+
+  if (hasStates) {
+    drawDrillMap(data);
+  } else {
+    drawDrillCitiesOnly(data);
+  }
+}
+
+// ═══════════════════════════════════════════
+// DRILL MAP WITH STATES (using simplified polygons)
+// ═══════════════════════════════════════════
+
+// We fetch state-level data from Natural Earth / gadm simplified inline
+// For common countries we use the world atlas + filter; for states we embed simplified data
+
+const STATE_TOPOJSON_URLS = {
+  'USA': 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json',
+};
+
+async function drawDrillMap(data) {
+  document.getElementById('drill-svg').innerHTML = '';
+  const area = document.getElementById('drill-map-area');
+  const W = area.clientWidth, H = area.clientHeight;
+
+  const svg = d3.select('#drill-svg').attr('viewBox', `0 0 ${W} ${H}`);
+  const g = svg.append('g').attr('id', 'drill-g');
+
+  if (drillCountryId === 'USA' && data.states.length > 0) {
+    // Use US atlas
+    try {
+      const us = await fetch(STATE_TOPOJSON_URLS['USA']).then(r => r.json());
+      const stateFeatures = topojson.feature(us, us.objects.states).features;
+      const proj = d3.geoAlbersUsa().fitSize([W, H], topojson.feature(us, us.objects.states));
+      const path = d3.geoPath().projection(proj);
+
+      // FIPS to state abbr
+      const fipsToAbbr = {'01':'AL','02':'AK','04':'AZ','05':'AR','06':'CA','08':'CO','09':'CT','10':'DE','12':'FL','13':'GA','15':'HI','16':'ID','17':'IL','18':'IN','19':'IA','20':'KS','21':'KY','22':'LA','23':'ME','24':'MD','25':'MA','26':'MI','27':'MN','28':'MS','29':'MO','30':'MT','31':'NE','32':'NV','33':'NH','34':'NJ','35':'NM','36':'NY','37':'NC','38':'ND','39':'OH','40':'OK','41':'OR','42':'PA','44':'RI','45':'SC','46':'SD','47':'TN','48':'TX','49':'UT','50':'VT','51':'VA','53':'WA','54':'WV','55':'WI','56':'WY'};
+
+      stateFeatures.forEach(feature => {
+        const fips = String(feature.id).padStart(2,'0');
+        const abbr = fipsToAbbr[fips];
+        const stateObj = data.states.find(s => s.id === abbr);
+        if (!stateObj) return;
+        const cls = getDrillClass(abbr);
+        g.append('path')
+          .datum(feature)
+          .attr('class', `s-path ${cls}`)
+          .attr('id', `sp-${abbr}`)
+          .attr('d', path)
+          .on('click', () => selectDrillRegion(abbr));
+
+        if (drillSubmitted) {
+          try {
+            const c = path.centroid(feature);
+            if (c && !isNaN(c[0])) {
+              const ans = drillAnswers[abbr] || '';
+              const correct = ans.trim().toLowerCase() === stateObj.name.toLowerCase();
+              g.append('text')
+                .attr('class', `c-label ${ans ? (correct ? 'correct' : 'incorrect') : 'pending'}`)
+                .attr('x', c[0]).attr('y', c[1])
+                .style('font-size', '7px')
+                .text((ans || '').slice(0,10) + (ans ? (correct?' ✓':' ✗') : ''));
+            }
+          } catch(e) {}
+        }
+      });
+
+      setupDrillZoom(svg, g);
+      updateDrillScore(data);
+      return;
+    } catch(e) { console.warn('US atlas failed, falling back', e); }
+  }
+
+  // Generic fallback: use world atlas, zoom to country, show "no state data" but still draw country outline + cities
+  try {
+    const world = await loadGeoData();
+    const isoNum = buildISO3toNum();
+    const numId = isoNum[drillCountryId];
+    const allFeatures = topojson.feature(world, world.objects.countries).features;
+    const countryFeature = allFeatures.find(f => String(f.id) === String(numId));
+
+    if (countryFeature) {
+      const proj = d3.geoMercator().fitSize([W * 0.9, H * 0.9], countryFeature).translate([W/2, H/2]);
+      // Refit properly
+      const proj2 = d3.geoMercator().fitExtent([[W*0.05, H*0.05],[W*0.95,H*0.95]], countryFeature);
+      const path = d3.geoPath().projection(proj2);
+
+      g.append('path')
+        .datum(countryFeature)
+        .attr('class', 's-path')
+        .attr('d', path)
+        .style('cursor', 'default');
+
+      // Place cities as dots (no states to click)
+      const centroid = path.centroid(countryFeature);
+      const bounds = path.bounds(countryFeature);
+      const bW = bounds[1][0] - bounds[0][0];
+      const bH = bounds[1][1] - bounds[0][1];
+
+      // Scatter cities within bounds for drag-drop
+      (data.cities || []).forEach((city, i) => {
+        const cx = bounds[0][0] + (i % 5 + 0.5) / 5 * bW;
+        const cy = bounds[0][1] + (Math.floor(i / 5) + 0.5) / Math.ceil(data.cities.length / 5) * bH;
+      });
+
+      setupDropZone(svg, g, proj2, path);
+    }
+
+    // Show cities section since no states
+    document.getElementById('cities-section').style.display = 'block';
+    setupDrillZoom(svg, g);
+    updateDrillScore(data);
+  } catch(e) {
+    console.warn('Drill map error:', e);
+  }
+}
+
+function drawDrillCitiesOnly(data) {
+  // No states — just show country outline for city placement
+  drawDrillMap(data);
+}
+
+function setupDropZone(svg, g, proj, path) {
+  const area = document.getElementById('drill-map-area');
+  area.addEventListener('dragover', e => { e.preventDefault(); });
+  area.addEventListener('drop', onCityDrop);
+}
+
+function onCityDragStart(e) {
+  e.dataTransfer.setData('city', e.currentTarget.dataset.city);
+}
+
+function onCityDrop(e) {
+  e.preventDefault();
+  const city = e.dataTransfer.getData('city');
+  if (!city) return;
+  const area = document.getElementById('drill-map-area');
+  const rect = area.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  // Place marker
+  placeCityMarker(city, x, y);
+
+  // Mark chip as placed
+  const chip = document.querySelector(`.city-chip[data-city="${city}"]`);
+  if (chip) chip.classList.add('placed');
+  cityPlacements[city] = { x, y };
+}
+
+function placeCityMarker(city, x, y) {
+  // Remove existing
+  d3.select(`#city-${CSS.escape(city)}`).remove();
+  const svg = d3.select('#drill-svg');
+  const g = svg.select('#drill-g');
+
+  // Account for zoom transform
+  const t = currentDrillTransform;
+  const mx = (x - t.x) / t.k;
+  const my = (y - t.y) / t.k;
+
+  const marker = g.append('g')
+    .attr('class', 'city-marker')
+    .attr('id', `city-${city.replace(/\s/g,'_')}`)
+    .attr('transform', `translate(${mx},${my})`);
+
+  marker.append('circle').attr('r', 5);
+  marker.append('text').attr('y', -10).text(city);
+}
+
+// ═══════════════════════════════════════════
+// DRILL REGION INTERACTION
+// ═══════════════════════════════════════════
+function getDrillClass(id) {
+  if (!drillSubmitted) return drillSelected === id ? 'sel' : '';
+  const data = DRILL_DATA[drillCountryId];
+  const region = (data.states || []).find(s => s.id === id);
+  if (!region) return '';
+  const ans = (drillAnswers[id] || '').trim().toLowerCase();
+  if (!ans) return '';
+  return ans === region.name.toLowerCase() ? 'correct' : 'incorrect';
+}
+
+function selectDrillRegion(id) {
+  if (drillSubmitted) return;
+  drillSelected = id;
+
+  d3.selectAll('.s-path').each(function() {
+    const sid = this.id.replace('sp-','');
+    d3.select(this).attr('class', `s-path ${getDrillClass(sid)}`);
+  });
+
+  const box = document.getElementById('drill-sel-box');
+  box.style.display = 'block';
+  const inp = document.getElementById('drill-inp');
+  inp.value = drillAnswers[id] || '';
+  inp.setAttribute('data-id', id);
+  setTimeout(() => inp.focus(), 50);
+  updateDrillScore(DRILL_DATA[drillCountryId]);
+}
+
+function saveDrillAnswer(val) {
+  const id = document.getElementById('drill-inp').getAttribute('data-id');
+  if (id) drillAnswers[id] = val;
+  updateDrillScore(DRILL_DATA[drillCountryId]);
+}
+
+function updateDrillScore(data) {
+  if (!data) return;
+  const total = (data.states || []).length;
+  const filled = (data.states || []).filter(s => (drillAnswers[s.id]||'').trim()).length;
+  const el = document.getElementById('drill-score');
+  if (total === 0) {
+    el.textContent = `${Object.keys(cityPlacements).length} / ${(data.cities||[]).length} cities placed`;
+  } else {
+    el.textContent = `${filled} / ${total} regions filled`;
+  }
+}
+
+function submitDrill() {
+  const data = DRILL_DATA[drillCountryId];
+  if (!data) return;
+  const hasStates = data.states && data.states.length > 0;
+
+  if (hasStates && !drillSubmitted) {
+    drillSubmitted = true;
+    drillSelected = null;
+    document.getElementById('drill-sel-box').style.display = 'none';
+
+    const total = data.states.length;
+    const correct = data.states.filter(s => {
+      const ans = (drillAnswers[s.id] || '').trim().toLowerCase();
+      return ans === s.name.toLowerCase();
+    }).length;
+    const pct = Math.round(correct/total*100);
+
+    // Redraw
+    drawDrillMap(data);
+
+    // Show cities after submitting states
+    if (data.cities && data.cities.length > 0) {
+      document.getElementById('cities-section').style.display = 'block';
+      document.getElementById('drill-submit-btn').textContent = '✓ Submit Cities';
+      document.getElementById('drill-subtitle').textContent = 'Now drag cities to their correct locations';
+    }
+
+    // Show result card
+    const emoji = pct===100?'🎉':pct>=70?'🌟':pct>=50?'👍':'📚';
+    const scoreClass = pct>=70?'great':pct>=50?'ok':'poor';
+    document.getElementById('drill-results-container').innerHTML = `
+      <div class="results-overlay" onclick="this.style.display='none'">
+        <div class="results-card" onclick="event.stopPropagation()">
+          <div class="results-emoji">${emoji}</div>
+          <div class="results-title">Regions Result</div>
+          <div class="results-score ${scoreClass}">${correct}/${total}</div>
+          <div class="results-pct">${pct}% — ${pct===100?'Perfect!':pct>=70?'Great job!':'Keep practicing!'}</div>
+          ${data.cities&&data.cities.length?'<div class="results-msg" style="margin-top:0.5rem;">Now drag the cities onto the map!</div>':''}
+          <div class="results-btns">
+            <button class="r-btn" onclick="this.closest(\'.results-overlay\').style.display=\'none\'">Continue</button>
+            <button class="r-btn" onclick="resetDrill()">Try Again</button>
+          </div>
+        </div>
+      </div>`;
+
+    updateDrillScore(data);
+  } else if (!hasStates || drillSubmitted) {
+    // Submit cities
+    citySubmitted = true;
+    const placed = Object.keys(cityPlacements).length;
+    const total = (data.cities||[]).length;
+    document.getElementById('drill-results-container').innerHTML = `
+      <div class="results-overlay" onclick="this.style.display='none'">
+        <div class="results-card" onclick="event.stopPropagation()">
+          <div class="results-emoji">${placed===total?'🎉':'👍'}</div>
+          <div class="results-title">Cities Placed</div>
+          <div class="results-score great">${placed}/${total}</div>
+          <div class="results-msg">Cities placed on the map. Study the locations!</div>
+          <div class="results-btns">
+            <button class="r-btn" onclick="this.closest(\'.results-overlay\').style.display=\'none\'">Review</button>
+            <button class="r-btn primary" onclick="backToMap()">Back to Map</button>
+          </div>
+        </div>
+      </div>`;
+  }
+}
+
+function resetDrill() {
+  drillAnswers = {};
+  drillSubmitted = false;
+  drillSelected = null;
+  cityPlacements = {};
+  citySubmitted = false;
+  document.getElementById('drill-sel-box').style.display = 'none';
+  document.getElementById('drill-results-container').innerHTML = '';
+  document.getElementById('cities-section').style.display = 'none';
+  startDrill();
+}
+
+// ═══════════════════════════════════════════
+// DRILL ZOOM
+// ═══════════════════════════════════════════
+function setupDrillZoom(svg, g) {
+  drillZoom = d3.zoom()
+    .scaleExtent([0.5, 15])
+    .on('zoom', (event) => {
+      currentDrillTransform = event.transform;
+      g.attr('transform', event.transform);
+    });
+  svg.call(drillZoom);
+}
+
+function zoomDrill(factor) {
+  const svg = d3.select('#drill-svg');
+  if (drillZoom) svg.transition().duration(250).call(drillZoom.scaleBy, factor);
+}
+function resetDrillView() {
+  currentDrillTransform = d3.zoomIdentity;
+  const svg = d3.select('#drill-svg');
+  if (drillZoom) svg.transition().duration(300).call(drillZoom.transform, d3.zoomIdentity);
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+// Preload geo data in background
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => loadGeoData().catch(()=>{}), 500);
+});
+</script>
+</body>
+</html>

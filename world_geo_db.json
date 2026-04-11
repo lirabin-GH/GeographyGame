@@ -1,0 +1,1457 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "name": "World Geography Database",
+    "description": "Comprehensive geographic data for continents, countries, subdivisions, and cities. Designed as a game data source.",
+    "author": "Claude AI",
+    "created": "2026-04-11",
+    "license": "Public Domain",
+    "coordinate_system": "WGS84 (EPSG:4326)",
+    "notes": "Border paths use simplified SVG-compatible coordinates projected to a flat map. For game use, approximate boundaries are provided."
+  },
+  "oceans": [
+    {"id": "pacific", "name": "Pacific Ocean", "area_km2": 165250000, "color": "#1a5276"},
+    {"id": "atlantic", "name": "Atlantic Ocean", "area_km2": 106460000, "color": "#1b4f72"},
+    {"id": "indian", "name": "Indian Ocean", "area_km2": 70560000, "color": "#1a5276"},
+    {"id": "southern", "name": "Southern Ocean", "area_km2": 21960000, "color": "#154360"},
+    {"id": "arctic", "name": "Arctic Ocean", "area_km2": 14060000, "color": "#1f618d"}
+  ],
+  "seas": [
+    {"id": "mediterranean", "name": "Mediterranean Sea", "ocean": "atlantic", "lat": 35.0, "lng": 18.0},
+    {"id": "caribbean", "name": "Caribbean Sea", "ocean": "atlantic", "lat": 15.0, "lng": -75.0},
+    {"id": "south_china", "name": "South China Sea", "ocean": "pacific", "lat": 12.0, "lng": 114.0},
+    {"id": "bering", "name": "Bering Sea", "ocean": "pacific", "lat": 58.0, "lng": -175.0},
+    {"id": "gulf_of_mexico", "name": "Gulf of Mexico", "ocean": "atlantic", "lat": 25.0, "lng": -90.0},
+    {"id": "sea_of_okhotsk", "name": "Sea of Okhotsk", "ocean": "pacific", "lat": 54.0, "lng": 150.0},
+    {"id": "east_china", "name": "East China Sea", "ocean": "pacific", "lat": 29.0, "lng": 125.0},
+    {"id": "hudson_bay", "name": "Hudson Bay", "ocean": "arctic", "lat": 60.0, "lng": -85.0},
+    {"id": "sea_of_japan", "name": "Sea of Japan", "ocean": "pacific", "lat": 40.0, "lng": 135.0},
+    {"id": "andaman", "name": "Andaman Sea", "ocean": "indian", "lat": 10.0, "lng": 97.0},
+    {"id": "north_sea", "name": "North Sea", "ocean": "atlantic", "lat": 56.0, "lng": 3.0},
+    {"id": "red_sea", "name": "Red Sea", "ocean": "indian", "lat": 20.0, "lng": 38.0},
+    {"id": "baltic", "name": "Baltic Sea", "ocean": "atlantic", "lat": 58.0, "lng": 20.0},
+    {"id": "arabian_sea", "name": "Arabian Sea", "ocean": "indian", "lat": 15.0, "lng": 65.0},
+    {"id": "philippine", "name": "Philippine Sea", "ocean": "pacific", "lat": 20.0, "lng": 130.0},
+    {"id": "coral", "name": "Coral Sea", "ocean": "pacific", "lat": -18.0, "lng": 155.0},
+    {"id": "bay_of_bengal", "name": "Bay of Bengal", "ocean": "indian", "lat": 15.0, "lng": 87.0},
+    {"id": "persian_gulf", "name": "Persian Gulf", "ocean": "indian", "lat": 26.0, "lng": 51.0},
+    {"id": "black_sea", "name": "Black Sea", "ocean": "atlantic", "lat": 43.0, "lng": 35.0},
+    {"id": "caspian_sea", "name": "Caspian Sea", "ocean": null, "lat": 41.0, "lng": 51.0},
+    {"id": "tasman", "name": "Tasman Sea", "ocean": "pacific", "lat": -38.0, "lng": 163.0},
+    {"id": "aral_sea", "name": "Aral Sea", "ocean": null, "lat": 45.0, "lng": 59.0},
+    {"id": "dead_sea", "name": "Dead Sea", "ocean": null, "lat": 31.5, "lng": 35.5}
+  ],
+  "lakes": [
+    {"id": "lake_superior", "name": "Lake Superior", "continent": "americas", "country": "US/CA", "lat": 47.7, "lng": -87.5, "area_km2": 82100},
+    {"id": "lake_victoria", "name": "Lake Victoria", "continent": "africa", "country": "TZ/UG/KE", "lat": -1.0, "lng": 33.0, "area_km2": 68870},
+    {"id": "lake_huron", "name": "Lake Huron", "continent": "americas", "country": "US/CA", "lat": 44.8, "lng": -82.4, "area_km2": 59600},
+    {"id": "lake_michigan", "name": "Lake Michigan", "continent": "americas", "country": "US", "lat": 43.6, "lng": -87.0, "area_km2": 57800},
+    {"id": "lake_tanganyika", "name": "Lake Tanganyika", "continent": "africa", "country": "TZ/CD/BI/ZM", "lat": -6.0, "lng": 29.5, "area_km2": 32600},
+    {"id": "lake_baikal", "name": "Lake Baikal", "continent": "asia", "country": "RU", "lat": 53.5, "lng": 108.0, "area_km2": 31722},
+    {"id": "great_bear_lake", "name": "Great Bear Lake", "continent": "americas", "country": "CA", "lat": 65.8, "lng": -121.3, "area_km2": 31153},
+    {"id": "lake_malawi", "name": "Lake Malawi", "continent": "africa", "country": "MW/MZ/TZ", "lat": -12.0, "lng": 34.5, "area_km2": 29600},
+    {"id": "lake_erie", "name": "Lake Erie", "continent": "americas", "country": "US/CA", "lat": 42.2, "lng": -81.2, "area_km2": 25700},
+    {"id": "lake_chad", "name": "Lake Chad", "continent": "africa", "country": "TD/CM/NE/NG", "lat": 13.0, "lng": 14.0, "area_km2": 1350},
+    {"id": "lake_titicaca", "name": "Lake Titicaca", "continent": "americas", "country": "PE/BO", "lat": -15.8, "lng": -69.3, "area_km2": 8372},
+    {"id": "lake_ladoga", "name": "Lake Ladoga", "continent": "europe", "country": "RU", "lat": 61.0, "lng": 31.5, "area_km2": 17700},
+    {"id": "lake_onega", "name": "Lake Onega", "continent": "europe", "country": "RU", "lat": 61.5, "lng": 35.5, "area_km2": 9700},
+    {"id": "lake_balkhash", "name": "Lake Balkhash", "continent": "asia", "country": "KZ", "lat": 46.5, "lng": 75.0, "area_km2": 16400}
+  ],
+  "continents": [
+    {
+      "id": "europe",
+      "name": "Europe",
+      "area_km2": 10180000,
+      "population": 750000000,
+      "color": "#2ecc71",
+      "center": {"lat": 54.0, "lng": 15.0},
+      "bounds": {"north": 71.0, "south": 36.0, "west": -10.0, "east": 40.0},
+      "countries": [
+        {
+          "id": "GB", "name": "United Kingdom", "capital": "London", "population": 67886011, "area_km2": 243610,
+          "center": {"lat": 55.3, "lng": -3.4},
+          "subdivisions_type": "Constituent Nations",
+          "subdivisions": [
+            {"id": "GB-ENG", "name": "England", "capital": "London", "center": {"lat": 52.5, "lng": -1.5}},
+            {"id": "GB-SCT", "name": "Scotland", "capital": "Edinburgh", "center": {"lat": 56.5, "lng": -4.0}},
+            {"id": "GB-WLS", "name": "Wales", "capital": "Cardiff", "center": {"lat": 52.1, "lng": -3.6}},
+            {"id": "GB-NIR", "name": "Northern Ireland", "capital": "Belfast", "center": {"lat": 54.6, "lng": -6.7}}
+          ],
+          "cities": [
+            {"name": "London", "lat": 51.507, "lng": -0.128, "population": 8982000, "capital": true},
+            {"name": "Birmingham", "lat": 52.486, "lng": -1.890, "population": 1141816},
+            {"name": "Manchester", "lat": 53.483, "lng": -2.244, "population": 553230},
+            {"name": "Glasgow", "lat": 55.864, "lng": -4.252, "population": 635640},
+            {"name": "Liverpool", "lat": 53.408, "lng": -2.992, "population": 498042},
+            {"name": "Edinburgh", "lat": 55.953, "lng": -3.189, "population": 488050},
+            {"name": "Leeds", "lat": 53.801, "lng": -1.549, "population": 503388},
+            {"name": "Bristol", "lat": 51.455, "lng": -2.588, "population": 467099},
+            {"name": "Cardiff", "lat": 51.482, "lng": -3.179, "population": 362756},
+            {"name": "Belfast", "lat": 54.597, "lng": -5.930, "population": 343542}
+          ]
+        },
+        {
+          "id": "FR", "name": "France", "capital": "Paris", "population": 67390000, "area_km2": 640679,
+          "center": {"lat": 46.0, "lng": 2.0},
+          "subdivisions_type": "Metropolitan Regions",
+          "subdivisions": [
+            {"id": "FR-IDF", "name": "Île-de-France", "capital": "Paris", "center": {"lat": 48.8, "lng": 2.5}},
+            {"id": "FR-ARA", "name": "Auvergne-Rhône-Alpes", "capital": "Lyon", "center": {"lat": 45.4, "lng": 4.4}},
+            {"id": "FR-NAQ", "name": "Nouvelle-Aquitaine", "capital": "Bordeaux", "center": {"lat": 45.2, "lng": 0.7}},
+            {"id": "FR-OCC", "name": "Occitanie", "capital": "Toulouse", "center": {"lat": 43.6, "lng": 2.3}},
+            {"id": "FR-HDF", "name": "Hauts-de-France", "capital": "Lille", "center": {"lat": 49.9, "lng": 2.8}},
+            {"id": "FR-GES", "name": "Grand Est", "capital": "Strasbourg", "center": {"lat": 48.6, "lng": 5.8}},
+            {"id": "FR-PAC", "name": "Provence-Alpes-Côte d'Azur", "capital": "Marseille", "center": {"lat": 43.9, "lng": 6.1}},
+            {"id": "FR-PDL", "name": "Pays de la Loire", "capital": "Nantes", "center": {"lat": 47.5, "lng": -0.9}},
+            {"id": "FR-BRE", "name": "Brittany", "capital": "Rennes", "center": {"lat": 48.2, "lng": -2.8}},
+            {"id": "FR-NOR", "name": "Normandy", "capital": "Rouen", "center": {"lat": 49.1, "lng": 0.3}},
+            {"id": "FR-BFC", "name": "Bourgogne-Franche-Comté", "capital": "Dijon", "center": {"lat": 47.0, "lng": 5.0}},
+            {"id": "FR-CVL", "name": "Centre-Val de Loire", "capital": "Orléans", "center": {"lat": 47.6, "lng": 1.6}},
+            {"id": "FR-COR", "name": "Corsica", "capital": "Ajaccio", "center": {"lat": 42.1, "lng": 9.1}}
+          ],
+          "cities": [
+            {"name": "Paris", "lat": 48.856, "lng": 2.352, "population": 2161000, "capital": true},
+            {"name": "Marseille", "lat": 43.296, "lng": 5.370, "population": 870018},
+            {"name": "Lyon", "lat": 45.764, "lng": 4.836, "population": 522969},
+            {"name": "Toulouse", "lat": 43.605, "lng": 1.444, "population": 493465},
+            {"name": "Nice", "lat": 43.710, "lng": 7.262, "population": 342669},
+            {"name": "Nantes", "lat": 47.218, "lng": -1.554, "population": 314138},
+            {"name": "Strasbourg", "lat": 48.573, "lng": 7.752, "population": 284677},
+            {"name": "Montpellier", "lat": 43.611, "lng": 3.877, "population": 290053},
+            {"name": "Bordeaux", "lat": 44.838, "lng": -0.579, "population": 257804},
+            {"name": "Lille", "lat": 50.629, "lng": 3.057, "population": 236234}
+          ]
+        },
+        {
+          "id": "DE", "name": "Germany", "capital": "Berlin", "population": 83784000, "area_km2": 357022,
+          "center": {"lat": 51.2, "lng": 10.4},
+          "subdivisions_type": "States (Bundesländer)",
+          "subdivisions": [
+            {"id": "DE-BW", "name": "Baden-Württemberg", "capital": "Stuttgart", "center": {"lat": 48.5, "lng": 9.0}},
+            {"id": "DE-BY", "name": "Bavaria", "capital": "Munich", "center": {"lat": 48.8, "lng": 11.5}},
+            {"id": "DE-BE", "name": "Berlin", "capital": "Berlin", "center": {"lat": 52.5, "lng": 13.4}},
+            {"id": "DE-BB", "name": "Brandenburg", "capital": "Potsdam", "center": {"lat": 52.4, "lng": 13.1}},
+            {"id": "DE-HB", "name": "Bremen", "capital": "Bremen", "center": {"lat": 53.1, "lng": 8.8}},
+            {"id": "DE-HH", "name": "Hamburg", "capital": "Hamburg", "center": {"lat": 53.6, "lng": 10.0}},
+            {"id": "DE-HE", "name": "Hesse", "capital": "Wiesbaden", "center": {"lat": 50.7, "lng": 9.0}},
+            {"id": "DE-NI", "name": "Lower Saxony", "capital": "Hanover", "center": {"lat": 52.8, "lng": 9.8}},
+            {"id": "DE-MV", "name": "Mecklenburg-Vorpommern", "capital": "Schwerin", "center": {"lat": 53.8, "lng": 12.3}},
+            {"id": "DE-NW", "name": "North Rhine-Westphalia", "capital": "Düsseldorf", "center": {"lat": 51.5, "lng": 7.5}},
+            {"id": "DE-RP", "name": "Rhineland-Palatinate", "capital": "Mainz", "center": {"lat": 50.0, "lng": 7.3}},
+            {"id": "DE-SL", "name": "Saarland", "capital": "Saarbrücken", "center": {"lat": 49.4, "lng": 7.0}},
+            {"id": "DE-SN", "name": "Saxony", "capital": "Dresden", "center": {"lat": 51.0, "lng": 13.2}},
+            {"id": "DE-ST", "name": "Saxony-Anhalt", "capital": "Magdeburg", "center": {"lat": 52.0, "lng": 11.7}},
+            {"id": "DE-SH", "name": "Schleswig-Holstein", "capital": "Kiel", "center": {"lat": 54.2, "lng": 9.8}},
+            {"id": "DE-TH", "name": "Thuringia", "capital": "Erfurt", "center": {"lat": 50.9, "lng": 11.0}}
+          ],
+          "cities": [
+            {"name": "Berlin", "lat": 52.520, "lng": 13.405, "population": 3748148, "capital": true},
+            {"name": "Hamburg", "lat": 53.551, "lng": 9.994, "population": 1899160},
+            {"name": "Munich", "lat": 48.135, "lng": 11.582, "population": 1484226},
+            {"name": "Cologne", "lat": 50.938, "lng": 6.960, "population": 1085664},
+            {"name": "Frankfurt", "lat": 50.110, "lng": 8.682, "population": 753056},
+            {"name": "Stuttgart", "lat": 48.776, "lng": 9.183, "population": 634830},
+            {"name": "Düsseldorf", "lat": 51.228, "lng": 6.773, "population": 619294},
+            {"name": "Leipzig", "lat": 51.340, "lng": 12.375, "population": 597493},
+            {"name": "Dortmund", "lat": 51.514, "lng": 7.468, "population": 588250},
+            {"name": "Dresden", "lat": 51.051, "lng": 13.738, "population": 556780}
+          ]
+        },
+        {
+          "id": "IT", "name": "Italy", "capital": "Rome", "population": 60461826, "area_km2": 301340,
+          "center": {"lat": 41.9, "lng": 12.6},
+          "subdivisions_type": "Regions",
+          "subdivisions": [
+            {"id": "IT-25", "name": "Lombardy", "capital": "Milan", "center": {"lat": 45.6, "lng": 9.9}},
+            {"id": "IT-21", "name": "Piedmont", "capital": "Turin", "center": {"lat": 44.7, "lng": 7.7}},
+            {"id": "IT-34", "name": "Veneto", "capital": "Venice", "center": {"lat": 45.4, "lng": 11.9}},
+            {"id": "IT-45", "name": "Emilia-Romagna", "capital": "Bologna", "center": {"lat": 44.5, "lng": 11.3}},
+            {"id": "IT-52", "name": "Tuscany", "capital": "Florence", "center": {"lat": 43.3, "lng": 11.3}},
+            {"id": "IT-62", "name": "Lazio", "capital": "Rome", "center": {"lat": 41.9, "lng": 12.7}},
+            {"id": "IT-72", "name": "Campania", "capital": "Naples", "center": {"lat": 40.8, "lng": 14.8}},
+            {"id": "IT-82", "name": "Sicily", "capital": "Palermo", "center": {"lat": 37.6, "lng": 14.0}},
+            {"id": "IT-88", "name": "Sardinia", "capital": "Cagliari", "center": {"lat": 39.9, "lng": 9.1}}
+          ],
+          "cities": [
+            {"name": "Rome", "lat": 41.902, "lng": 12.496, "population": 2873000, "capital": true},
+            {"name": "Milan", "lat": 45.464, "lng": 9.190, "population": 1396059},
+            {"name": "Naples", "lat": 40.852, "lng": 14.268, "population": 959470},
+            {"name": "Turin", "lat": 45.070, "lng": 7.687, "population": 875698},
+            {"name": "Palermo", "lat": 38.116, "lng": 13.361, "population": 663401},
+            {"name": "Genoa", "lat": 44.407, "lng": 8.934, "population": 580223},
+            {"name": "Bologna", "lat": 44.494, "lng": 11.343, "population": 394463},
+            {"name": "Florence", "lat": 43.769, "lng": 11.256, "population": 382258},
+            {"name": "Venice", "lat": 45.440, "lng": 12.316, "population": 261905}
+          ]
+        },
+        {
+          "id": "ES", "name": "Spain", "capital": "Madrid", "population": 46754778, "area_km2": 505990,
+          "center": {"lat": 40.0, "lng": -4.0},
+          "subdivisions_type": "Autonomous Communities",
+          "subdivisions": [
+            {"id": "ES-AN", "name": "Andalusia", "capital": "Seville", "center": {"lat": 37.4, "lng": -4.8}},
+            {"id": "ES-CT", "name": "Catalonia", "capital": "Barcelona", "center": {"lat": 41.6, "lng": 1.5}},
+            {"id": "ES-MD", "name": "Community of Madrid", "capital": "Madrid", "center": {"lat": 40.4, "lng": -3.7}},
+            {"id": "ES-VC", "name": "Valencian Community", "capital": "Valencia", "center": {"lat": 39.5, "lng": -0.5}},
+            {"id": "ES-GA", "name": "Galicia", "capital": "Santiago de Compostela", "center": {"lat": 42.8, "lng": -8.0}},
+            {"id": "ES-CL", "name": "Castile and León", "capital": "Valladolid", "center": {"lat": 41.6, "lng": -4.0}},
+            {"id": "ES-PV", "name": "Basque Country", "capital": "Vitoria-Gasteiz", "center": {"lat": 42.9, "lng": -2.7}},
+            {"id": "ES-CN", "name": "Canary Islands", "capital": "Las Palmas", "center": {"lat": 28.1, "lng": -15.4}}
+          ],
+          "cities": [
+            {"name": "Madrid", "lat": 40.417, "lng": -3.704, "population": 3223000, "capital": true},
+            {"name": "Barcelona", "lat": 41.389, "lng": 2.159, "population": 1636762},
+            {"name": "Valencia", "lat": 39.470, "lng": -0.377, "population": 800215},
+            {"name": "Seville", "lat": 37.389, "lng": -5.984, "population": 688711},
+            {"name": "Zaragoza", "lat": 41.649, "lng": -0.889, "population": 674997},
+            {"name": "Málaga", "lat": 36.721, "lng": -4.421, "population": 574654},
+            {"name": "Bilbao", "lat": 43.263, "lng": -2.935, "population": 346574}
+          ]
+        },
+        {
+          "id": "PT", "name": "Portugal", "capital": "Lisbon", "population": 10196709, "area_km2": 92212,
+          "center": {"lat": 39.4, "lng": -8.2},
+          "cities": [
+            {"name": "Lisbon", "lat": 38.722, "lng": -9.139, "population": 545923, "capital": true},
+            {"name": "Porto", "lat": 41.158, "lng": -8.629, "population": 249633},
+            {"name": "Braga", "lat": 41.550, "lng": -8.420, "population": 193333}
+          ]
+        },
+        {
+          "id": "NL", "name": "Netherlands", "capital": "Amsterdam", "population": 17134872, "area_km2": 41543,
+          "center": {"lat": 52.1, "lng": 5.3},
+          "subdivisions_type": "Provinces",
+          "subdivisions": [
+            {"id": "NL-NH", "name": "North Holland", "capital": "Haarlem", "center": {"lat": 52.5, "lng": 4.8}},
+            {"id": "NL-ZH", "name": "South Holland", "capital": "The Hague", "center": {"lat": 52.0, "lng": 4.5}},
+            {"id": "NL-NB", "name": "North Brabant", "capital": "s-Hertogenbosch", "center": {"lat": 51.6, "lng": 5.3}}
+          ],
+          "cities": [
+            {"name": "Amsterdam", "lat": 52.370, "lng": 4.895, "population": 872680, "capital": true},
+            {"name": "Rotterdam", "lat": 51.925, "lng": 4.479, "population": 651446},
+            {"name": "The Hague", "lat": 52.070, "lng": 4.300, "population": 545163},
+            {"name": "Utrecht", "lat": 52.091, "lng": 5.122, "population": 357179}
+          ]
+        },
+        {
+          "id": "BE", "name": "Belgium", "capital": "Brussels", "population": 11589623, "area_km2": 30528,
+          "center": {"lat": 50.5, "lng": 4.5},
+          "subdivisions_type": "Regions",
+          "subdivisions": [
+            {"id": "BE-VLG", "name": "Flanders", "capital": "Brussels", "center": {"lat": 51.0, "lng": 3.7}},
+            {"id": "BE-WAL", "name": "Wallonia", "capital": "Namur", "center": {"lat": 50.3, "lng": 4.9}},
+            {"id": "BE-BRU", "name": "Brussels-Capital", "capital": "Brussels", "center": {"lat": 50.8, "lng": 4.4}}
+          ],
+          "cities": [
+            {"name": "Brussels", "lat": 50.847, "lng": 4.357, "population": 185103, "capital": true},
+            {"name": "Antwerp", "lat": 51.221, "lng": 4.402, "population": 529247},
+            {"name": "Ghent", "lat": 51.054, "lng": 3.718, "population": 262219}
+          ]
+        },
+        {
+          "id": "CH", "name": "Switzerland", "capital": "Bern", "population": 8654622, "area_km2": 41285,
+          "center": {"lat": 46.8, "lng": 8.2},
+          "subdivisions_type": "Cantons",
+          "subdivisions": [
+            {"id": "CH-ZH", "name": "Zürich", "capital": "Zürich", "center": {"lat": 47.4, "lng": 8.7}},
+            {"id": "CH-BE", "name": "Bern", "capital": "Bern", "center": {"lat": 46.9, "lng": 7.6}},
+            {"id": "CH-GE", "name": "Geneva", "capital": "Geneva", "center": {"lat": 46.2, "lng": 6.1}},
+            {"id": "CH-VD", "name": "Vaud", "capital": "Lausanne", "center": {"lat": 46.6, "lng": 6.5}}
+          ],
+          "cities": [
+            {"name": "Bern", "lat": 46.948, "lng": 7.448, "population": 133883, "capital": true},
+            {"name": "Zürich", "lat": 47.377, "lng": 8.541, "population": 415367},
+            {"name": "Geneva", "lat": 46.205, "lng": 6.142, "population": 203856},
+            {"name": "Basel", "lat": 47.559, "lng": 7.589, "population": 177654}
+          ]
+        },
+        {
+          "id": "AT", "name": "Austria", "capital": "Vienna", "population": 9006398, "area_km2": 83871,
+          "center": {"lat": 47.5, "lng": 14.5},
+          "subdivisions_type": "States",
+          "subdivisions": [
+            {"id": "AT-9", "name": "Vienna", "capital": "Vienna", "center": {"lat": 48.2, "lng": 16.4}},
+            {"id": "AT-6", "name": "Styria", "capital": "Graz", "center": {"lat": 47.3, "lng": 15.0}},
+            {"id": "AT-5", "name": "Salzburg", "capital": "Salzburg", "center": {"lat": 47.3, "lng": 13.0}},
+            {"id": "AT-7", "name": "Tyrol", "capital": "Innsbruck", "center": {"lat": 47.1, "lng": 11.4}}
+          ],
+          "cities": [
+            {"name": "Vienna", "lat": 48.208, "lng": 16.372, "population": 1911191, "capital": true},
+            {"name": "Graz", "lat": 47.071, "lng": 15.439, "population": 291072},
+            {"name": "Linz", "lat": 48.306, "lng": 14.286, "population": 205726},
+            {"name": "Salzburg", "lat": 47.800, "lng": 13.045, "population": 155021},
+            {"name": "Innsbruck", "lat": 47.260, "lng": 11.394, "population": 131961}
+          ]
+        },
+        {
+          "id": "PL", "name": "Poland", "capital": "Warsaw", "population": 37846611, "area_km2": 312696,
+          "center": {"lat": 52.0, "lng": 20.0},
+          "subdivisions_type": "Voivodeships",
+          "subdivisions": [
+            {"id": "PL-MZ", "name": "Masovia", "capital": "Warsaw", "center": {"lat": 52.2, "lng": 20.9}},
+            {"id": "PL-MA", "name": "Lesser Poland", "capital": "Kraków", "center": {"lat": 49.8, "lng": 20.1}},
+            {"id": "PL-DS", "name": "Lower Silesia", "capital": "Wrocław", "center": {"lat": 51.1, "lng": 16.6}},
+            {"id": "PL-PM", "name": "Pomerania", "capital": "Gdańsk", "center": {"lat": 54.2, "lng": 18.0}}
+          ],
+          "cities": [
+            {"name": "Warsaw", "lat": 52.230, "lng": 21.012, "population": 1793579, "capital": true},
+            {"name": "Kraków", "lat": 50.065, "lng": 19.945, "population": 779115},
+            {"name": "Łódź", "lat": 51.760, "lng": 19.456, "population": 672185},
+            {"name": "Wrocław", "lat": 51.110, "lng": 17.033, "population": 642869},
+            {"name": "Poznań", "lat": 52.407, "lng": 16.930, "population": 534813},
+            {"name": "Gdańsk", "lat": 54.352, "lng": 18.647, "population": 470907}
+          ]
+        },
+        {
+          "id": "SE", "name": "Sweden", "capital": "Stockholm", "population": 10099265, "area_km2": 450295,
+          "center": {"lat": 62.0, "lng": 15.0},
+          "cities": [
+            {"name": "Stockholm", "lat": 59.329, "lng": 18.069, "population": 975904, "capital": true},
+            {"name": "Gothenburg", "lat": 57.709, "lng": 11.975, "population": 583056},
+            {"name": "Malmö", "lat": 55.606, "lng": 13.001, "population": 316588}
+          ]
+        },
+        {
+          "id": "NO", "name": "Norway", "capital": "Oslo", "population": 5421241, "area_km2": 385207,
+          "center": {"lat": 62.0, "lng": 10.0},
+          "cities": [
+            {"name": "Oslo", "lat": 59.914, "lng": 10.752, "population": 693494, "capital": true},
+            {"name": "Bergen", "lat": 60.392, "lng": 5.323, "population": 283929},
+            {"name": "Trondheim", "lat": 63.431, "lng": 10.395, "population": 205163}
+          ]
+        },
+        {
+          "id": "FI", "name": "Finland", "capital": "Helsinki", "population": 5540720, "area_km2": 338424,
+          "center": {"lat": 64.0, "lng": 26.0},
+          "cities": [
+            {"name": "Helsinki", "lat": 60.170, "lng": 24.938, "population": 655695, "capital": true},
+            {"name": "Espoo", "lat": 60.210, "lng": 24.658, "population": 289731},
+            {"name": "Tampere", "lat": 61.498, "lng": 23.761, "population": 238671}
+          ]
+        },
+        {
+          "id": "DK", "name": "Denmark", "capital": "Copenhagen", "population": 5818553, "area_km2": 42933,
+          "center": {"lat": 56.0, "lng": 10.0},
+          "cities": [
+            {"name": "Copenhagen", "lat": 55.676, "lng": 12.568, "population": 794128, "capital": true},
+            {"name": "Aarhus", "lat": 56.163, "lng": 10.204, "population": 349983},
+            {"name": "Odense", "lat": 55.396, "lng": 10.389, "population": 204895}
+          ]
+        },
+        {
+          "id": "CZ", "name": "Czech Republic", "capital": "Prague", "population": 10708981, "area_km2": 78866,
+          "center": {"lat": 49.8, "lng": 15.5},
+          "cities": [
+            {"name": "Prague", "lat": 50.075, "lng": 14.438, "population": 1324277, "capital": true},
+            {"name": "Brno", "lat": 49.195, "lng": 16.608, "population": 382405}
+          ]
+        },
+        {
+          "id": "IE", "name": "Ireland", "capital": "Dublin", "population": 4937786, "area_km2": 70273,
+          "center": {"lat": 53.4, "lng": -8.2},
+          "cities": [
+            {"name": "Dublin", "lat": 53.350, "lng": -6.266, "population": 1228179, "capital": true},
+            {"name": "Cork", "lat": 51.897, "lng": -8.470, "population": 210328}
+          ]
+        },
+        {
+          "id": "GR", "name": "Greece", "capital": "Athens", "population": 10423054, "area_km2": 131957,
+          "center": {"lat": 39.0, "lng": 22.0},
+          "cities": [
+            {"name": "Athens", "lat": 37.984, "lng": 23.728, "population": 3153000, "capital": true},
+            {"name": "Thessaloniki", "lat": 40.640, "lng": 22.944, "population": 1012297}
+          ]
+        },
+        {
+          "id": "RO", "name": "Romania", "capital": "Bucharest", "population": 19237691, "area_km2": 238397,
+          "center": {"lat": 46.0, "lng": 25.0},
+          "cities": [
+            {"name": "Bucharest", "lat": 44.426, "lng": 26.103, "population": 1883425, "capital": true},
+            {"name": "Cluj-Napoca", "lat": 46.770, "lng": 23.590, "population": 324576}
+          ]
+        },
+        {
+          "id": "HU", "name": "Hungary", "capital": "Budapest", "population": 9660351, "area_km2": 93028,
+          "center": {"lat": 47.0, "lng": 20.0},
+          "cities": [
+            {"name": "Budapest", "lat": 47.498, "lng": 19.040, "population": 1752286, "capital": true},
+            {"name": "Debrecen", "lat": 47.532, "lng": 21.625, "population": 203059}
+          ]
+        },
+        {
+          "id": "BG", "name": "Bulgaria", "capital": "Sofia", "population": 6948445, "area_km2": 110879,
+          "center": {"lat": 42.7, "lng": 25.5},
+          "cities": [
+            {"name": "Sofia", "lat": 42.698, "lng": 23.322, "population": 1307439, "capital": true},
+            {"name": "Plovdiv", "lat": 42.150, "lng": 24.750, "population": 346893}
+          ]
+        },
+        {
+          "id": "HR", "name": "Croatia", "capital": "Zagreb", "population": 4105267, "area_km2": 56594,
+          "center": {"lat": 45.1, "lng": 15.2},
+          "cities": [
+            {"name": "Zagreb", "lat": 45.815, "lng": 15.982, "population": 806341, "capital": true},
+            {"name": "Split", "lat": 43.509, "lng": 16.440, "population": 178102}
+          ]
+        },
+        {
+          "id": "SK", "name": "Slovakia", "capital": "Bratislava", "population": 5459642, "area_km2": 49035,
+          "center": {"lat": 48.7, "lng": 19.7},
+          "cities": [
+            {"name": "Bratislava", "lat": 48.149, "lng": 17.107, "population": 437725, "capital": true},
+            {"name": "Košice", "lat": 48.716, "lng": 21.261, "population": 239141}
+          ]
+        },
+        {
+          "id": "RS", "name": "Serbia", "capital": "Belgrade", "population": 6982084, "area_km2": 88361,
+          "center": {"lat": 44.0, "lng": 21.0},
+          "cities": [
+            {"name": "Belgrade", "lat": 44.787, "lng": 20.457, "population": 1378682, "capital": true},
+            {"name": "Novi Sad", "lat": 45.254, "lng": 19.843, "population": 289128}
+          ]
+        },
+        {
+          "id": "UA", "name": "Ukraine", "capital": "Kyiv", "population": 43733762, "area_km2": 603500,
+          "center": {"lat": 49.0, "lng": 32.0},
+          "cities": [
+            {"name": "Kyiv", "lat": 50.450, "lng": 30.524, "population": 2962180, "capital": true},
+            {"name": "Kharkiv", "lat": 49.988, "lng": 36.232, "population": 1443207},
+            {"name": "Odessa", "lat": 46.483, "lng": 30.713, "population": 1017699},
+            {"name": "Dnipro", "lat": 48.464, "lng": 35.046, "population": 968502},
+            {"name": "Lviv", "lat": 49.842, "lng": 24.031, "population": 724713}
+          ]
+        },
+        {
+          "id": "BY", "name": "Belarus", "capital": "Minsk", "population": 9449323, "area_km2": 207600,
+          "center": {"lat": 53.7, "lng": 27.9},
+          "cities": [
+            {"name": "Minsk", "lat": 53.904, "lng": 27.561, "population": 2009786, "capital": true}
+          ]
+        },
+        {
+          "id": "LT", "name": "Lithuania", "capital": "Vilnius", "population": 2722289, "area_km2": 65300,
+          "center": {"lat": 55.2, "lng": 24.0},
+          "cities": [{"name": "Vilnius", "lat": 54.687, "lng": 25.280, "population": 574147, "capital": true}]
+        },
+        {
+          "id": "LV", "name": "Latvia", "capital": "Riga", "population": 1886198, "area_km2": 64559,
+          "center": {"lat": 57.0, "lng": 25.0},
+          "cities": [{"name": "Riga", "lat": 56.950, "lng": 24.106, "population": 614618, "capital": true}]
+        },
+        {
+          "id": "EE", "name": "Estonia", "capital": "Tallinn", "population": 1326535, "area_km2": 45228,
+          "center": {"lat": 58.6, "lng": 25.0},
+          "cities": [{"name": "Tallinn", "lat": 59.437, "lng": 24.754, "population": 437619, "capital": true}]
+        },
+        {
+          "id": "SI", "name": "Slovenia", "capital": "Ljubljana", "population": 2078938, "area_km2": 20273,
+          "center": {"lat": 46.2, "lng": 14.8},
+          "cities": [{"name": "Ljubljana", "lat": 46.056, "lng": 14.508, "population": 292988, "capital": true}]
+        },
+        {
+          "id": "AL", "name": "Albania", "capital": "Tirana", "population": 2877797, "area_km2": 28748,
+          "center": {"lat": 41.0, "lng": 20.0},
+          "cities": [{"name": "Tirana", "lat": 41.328, "lng": 19.818, "population": 418495, "capital": true}]
+        },
+        {
+          "id": "ME", "name": "Montenegro", "capital": "Podgorica", "population": 628066, "area_km2": 13812,
+          "center": {"lat": 42.5, "lng": 19.3},
+          "cities": [{"name": "Podgorica", "lat": 42.441, "lng": 19.264, "population": 150977, "capital": true}]
+        },
+        {
+          "id": "MK", "name": "North Macedonia", "capital": "Skopje", "population": 2083374, "area_km2": 25713,
+          "center": {"lat": 41.5, "lng": 21.4},
+          "cities": [{"name": "Skopje", "lat": 42.004, "lng": 21.431, "population": 544086, "capital": true}]
+        },
+        {
+          "id": "BA", "name": "Bosnia and Herzegovina", "capital": "Sarajevo", "population": 3280819, "area_km2": 51197,
+          "center": {"lat": 44.0, "lng": 17.7},
+          "cities": [{"name": "Sarajevo", "lat": 43.856, "lng": 18.413, "population": 275524, "capital": true}]
+        },
+        {
+          "id": "IS", "name": "Iceland", "capital": "Reykjavik", "population": 341243, "area_km2": 103000,
+          "center": {"lat": 65.0, "lng": -19.0},
+          "cities": [{"name": "Reykjavik", "lat": 64.147, "lng": -21.943, "population": 131136, "capital": true}]
+        },
+        {
+          "id": "LU", "name": "Luxembourg", "capital": "Luxembourg City", "population": 625978, "area_km2": 2586,
+          "center": {"lat": 49.8, "lng": 6.1},
+          "cities": [{"name": "Luxembourg City", "lat": 49.612, "lng": 6.132, "population": 124528, "capital": true}]
+        },
+        {
+          "id": "MT", "name": "Malta", "capital": "Valletta", "population": 441543, "area_km2": 316,
+          "center": {"lat": 35.9, "lng": 14.4},
+          "cities": [{"name": "Valletta", "lat": 35.899, "lng": 14.514, "population": 5827, "capital": true}]
+        },
+        {
+          "id": "CY", "name": "Cyprus", "capital": "Nicosia", "population": 1207359, "area_km2": 9251,
+          "center": {"lat": 35.1, "lng": 33.4},
+          "cities": [{"name": "Nicosia", "lat": 35.174, "lng": 33.382, "population": 200452, "capital": true}]
+        },
+        {
+          "id": "MD", "name": "Moldova", "capital": "Chișinău", "population": 2657637, "area_km2": 33846,
+          "center": {"lat": 47.0, "lng": 28.8},
+          "cities": [{"name": "Chișinău", "lat": 47.011, "lng": 28.836, "population": 639000, "capital": true}]
+        }
+      ]
+    },
+    {
+      "id": "asia",
+      "name": "Asia",
+      "area_km2": 44580000,
+      "population": 4641054775,
+      "color": "#e74c3c",
+      "center": {"lat": 34.0, "lng": 100.0},
+      "bounds": {"north": 77.0, "south": -10.0, "west": 26.0, "east": 180.0},
+      "countries": [
+        {
+          "id": "CN", "name": "China", "capital": "Beijing", "population": 1402112000, "area_km2": 9596961,
+          "center": {"lat": 35.9, "lng": 104.2},
+          "subdivisions_type": "Provinces & Regions",
+          "subdivisions": [
+            {"id": "CN-BJ", "name": "Beijing", "capital": "Beijing", "center": {"lat": 39.9, "lng": 116.4}},
+            {"id": "CN-SH", "name": "Shanghai", "capital": "Shanghai", "center": {"lat": 31.2, "lng": 121.5}},
+            {"id": "CN-GD", "name": "Guangdong", "capital": "Guangzhou", "center": {"lat": 23.1, "lng": 113.3}},
+            {"id": "CN-ZJ", "name": "Zhejiang", "capital": "Hangzhou", "center": {"lat": 29.1, "lng": 120.1}},
+            {"id": "CN-JS", "name": "Jiangsu", "capital": "Nanjing", "center": {"lat": 32.1, "lng": 118.8}},
+            {"id": "CN-SC", "name": "Sichuan", "capital": "Chengdu", "center": {"lat": 30.6, "lng": 104.1}},
+            {"id": "CN-HB", "name": "Hubei", "capital": "Wuhan", "center": {"lat": 30.6, "lng": 114.3}},
+            {"id": "CN-SD", "name": "Shandong", "capital": "Jinan", "center": {"lat": 36.7, "lng": 117.0}},
+            {"id": "CN-XZ", "name": "Tibet", "capital": "Lhasa", "center": {"lat": 29.7, "lng": 91.1}},
+            {"id": "CN-XJ", "name": "Xinjiang", "capital": "Ürümqi", "center": {"lat": 43.8, "lng": 87.6}},
+            {"id": "CN-NM", "name": "Inner Mongolia", "capital": "Hohhot", "center": {"lat": 40.8, "lng": 111.7}},
+            {"id": "CN-HK", "name": "Hong Kong SAR", "capital": "Hong Kong", "center": {"lat": 22.3, "lng": 114.2}},
+            {"id": "CN-MO", "name": "Macau SAR", "capital": "Macau", "center": {"lat": 22.2, "lng": 113.5}}
+          ],
+          "cities": [
+            {"name": "Beijing", "lat": 39.904, "lng": 116.407, "population": 21540000, "capital": true},
+            {"name": "Shanghai", "lat": 31.230, "lng": 121.474, "population": 24870000},
+            {"name": "Guangzhou", "lat": 23.130, "lng": 113.264, "population": 18676605},
+            {"name": "Shenzhen", "lat": 22.543, "lng": 114.058, "population": 17560000},
+            {"name": "Chengdu", "lat": 30.573, "lng": 104.067, "population": 16330000},
+            {"name": "Wuhan", "lat": 30.593, "lng": 114.306, "population": 12327000},
+            {"name": "Chongqing", "lat": 29.563, "lng": 106.552, "population": 16380000},
+            {"name": "Xi'an", "lat": 34.341, "lng": 108.940, "population": 12952907},
+            {"name": "Hangzhou", "lat": 30.274, "lng": 120.155, "population": 11936010},
+            {"name": "Hong Kong", "lat": 22.320, "lng": 114.169, "population": 7482500}
+          ]
+        },
+        {
+          "id": "IN", "name": "India", "capital": "New Delhi", "population": 1380004385, "area_km2": 3287263,
+          "center": {"lat": 20.6, "lng": 79.0},
+          "subdivisions_type": "States & Union Territories",
+          "subdivisions": [
+            {"id": "IN-UP", "name": "Uttar Pradesh", "capital": "Lucknow", "center": {"lat": 27.0, "lng": 81.0}},
+            {"id": "IN-MH", "name": "Maharashtra", "capital": "Mumbai", "center": {"lat": 19.7, "lng": 75.7}},
+            {"id": "IN-KA", "name": "Karnataka", "capital": "Bengaluru", "center": {"lat": 15.3, "lng": 75.7}},
+            {"id": "IN-TN", "name": "Tamil Nadu", "capital": "Chennai", "center": {"lat": 11.1, "lng": 78.7}},
+            {"id": "IN-WB", "name": "West Bengal", "capital": "Kolkata", "center": {"lat": 22.9, "lng": 87.9}},
+            {"id": "IN-RJ", "name": "Rajasthan", "capital": "Jaipur", "center": {"lat": 27.0, "lng": 74.2}},
+            {"id": "IN-GJ", "name": "Gujarat", "capital": "Gandhinagar", "center": {"lat": 22.3, "lng": 71.2}},
+            {"id": "IN-KL", "name": "Kerala", "capital": "Thiruvananthapuram", "center": {"lat": 10.5, "lng": 76.3}},
+            {"id": "IN-DL", "name": "Delhi", "capital": "New Delhi", "center": {"lat": 28.7, "lng": 77.1}},
+            {"id": "IN-PB", "name": "Punjab", "capital": "Chandigarh", "center": {"lat": 31.1, "lng": 75.3}}
+          ],
+          "cities": [
+            {"name": "New Delhi", "lat": 28.614, "lng": 77.209, "population": 16787941, "capital": true},
+            {"name": "Mumbai", "lat": 19.076, "lng": 72.878, "population": 20411274},
+            {"name": "Bengaluru", "lat": 12.972, "lng": 77.595, "population": 12327000},
+            {"name": "Kolkata", "lat": 22.573, "lng": 88.364, "population": 14850066},
+            {"name": "Chennai", "lat": 13.083, "lng": 80.270, "population": 10971108},
+            {"name": "Hyderabad", "lat": 17.385, "lng": 78.487, "population": 10534418},
+            {"name": "Ahmedabad", "lat": 23.023, "lng": 72.571, "population": 8059441},
+            {"name": "Pune", "lat": 18.520, "lng": 73.857, "population": 7764000},
+            {"name": "Jaipur", "lat": 26.912, "lng": 75.787, "population": 3073350}
+          ]
+        },
+        {
+          "id": "JP", "name": "Japan", "capital": "Tokyo", "population": 126476461, "area_km2": 377975,
+          "center": {"lat": 36.2, "lng": 138.3},
+          "subdivisions_type": "Prefectures",
+          "subdivisions": [
+            {"id": "JP-13", "name": "Tokyo", "capital": "Tokyo", "center": {"lat": 35.7, "lng": 139.7}},
+            {"id": "JP-27", "name": "Osaka", "capital": "Osaka", "center": {"lat": 34.7, "lng": 135.5}},
+            {"id": "JP-23", "name": "Aichi", "capital": "Nagoya", "center": {"lat": 35.0, "lng": 137.0}},
+            {"id": "JP-01", "name": "Hokkaido", "capital": "Sapporo", "center": {"lat": 43.1, "lng": 141.3}},
+            {"id": "JP-40", "name": "Fukuoka", "capital": "Fukuoka", "center": {"lat": 33.6, "lng": 130.7}}
+          ],
+          "cities": [
+            {"name": "Tokyo", "lat": 35.682, "lng": 139.759, "population": 13960000, "capital": true},
+            {"name": "Osaka", "lat": 34.694, "lng": 135.502, "population": 2753862},
+            {"name": "Yokohama", "lat": 35.444, "lng": 139.638, "population": 3749000},
+            {"name": "Nagoya", "lat": 35.181, "lng": 136.906, "population": 2320361},
+            {"name": "Sapporo", "lat": 43.062, "lng": 141.354, "population": 1973395},
+            {"name": "Fukuoka", "lat": 33.590, "lng": 130.402, "population": 1603043},
+            {"name": "Kobe", "lat": 34.690, "lng": 135.196, "population": 1537272},
+            {"name": "Kyoto", "lat": 35.012, "lng": 135.768, "population": 1475183}
+          ]
+        },
+        {
+          "id": "KR", "name": "South Korea", "capital": "Seoul", "population": 51269185, "area_km2": 100210,
+          "center": {"lat": 35.9, "lng": 127.8},
+          "cities": [
+            {"name": "Seoul", "lat": 37.567, "lng": 126.978, "population": 9776000, "capital": true},
+            {"name": "Busan", "lat": 35.180, "lng": 129.075, "population": 3429000},
+            {"name": "Incheon", "lat": 37.456, "lng": 126.705, "population": 2958000},
+            {"name": "Daegu", "lat": 35.872, "lng": 128.602, "population": 2446000}
+          ]
+        },
+        {
+          "id": "ID", "name": "Indonesia", "capital": "Jakarta", "population": 273523615, "area_km2": 1904569,
+          "center": {"lat": -0.8, "lng": 114.0},
+          "subdivisions_type": "Provinces",
+          "subdivisions": [
+            {"id": "ID-JK", "name": "Jakarta", "capital": "Jakarta", "center": {"lat": -6.2, "lng": 106.8}},
+            {"id": "ID-JB", "name": "West Java", "capital": "Bandung", "center": {"lat": -6.9, "lng": 107.6}},
+            {"id": "ID-JT", "name": "Central Java", "capital": "Semarang", "center": {"lat": -7.2, "lng": 110.4}},
+            {"id": "ID-JI", "name": "East Java", "capital": "Surabaya", "center": {"lat": -7.5, "lng": 112.0}},
+            {"id": "ID-BA", "name": "Bali", "capital": "Denpasar", "center": {"lat": -8.4, "lng": 115.2}}
+          ],
+          "cities": [
+            {"name": "Jakarta", "lat": -6.175, "lng": 106.845, "population": 10562088, "capital": true},
+            {"name": "Surabaya", "lat": -7.250, "lng": 112.751, "population": 2874314},
+            {"name": "Bandung", "lat": -6.917, "lng": 107.619, "population": 2575478},
+            {"name": "Medan", "lat": 3.595, "lng": 98.672, "population": 2229408},
+            {"name": "Semarang", "lat": -6.967, "lng": 110.420, "population": 1786114}
+          ]
+        },
+        {
+          "id": "TH", "name": "Thailand", "capital": "Bangkok", "population": 69799978, "area_km2": 513120,
+          "center": {"lat": 15.9, "lng": 101.0},
+          "cities": [
+            {"name": "Bangkok", "lat": 13.756, "lng": 100.502, "population": 10539000, "capital": true},
+            {"name": "Chiang Mai", "lat": 18.788, "lng": 98.985, "population": 131091},
+            {"name": "Phuket", "lat": 7.880, "lng": 98.385, "population": 83000}
+          ]
+        },
+        {
+          "id": "VN", "name": "Vietnam", "capital": "Hanoi", "population": 97338579, "area_km2": 331212,
+          "center": {"lat": 14.1, "lng": 108.3},
+          "cities": [
+            {"name": "Hanoi", "lat": 21.028, "lng": 105.854, "population": 8054000, "capital": true},
+            {"name": "Ho Chi Minh City", "lat": 10.823, "lng": 106.630, "population": 8993000},
+            {"name": "Da Nang", "lat": 16.048, "lng": 108.206, "population": 1134310}
+          ]
+        },
+        {
+          "id": "PH", "name": "Philippines", "capital": "Manila", "population": 109581078, "area_km2": 300000,
+          "center": {"lat": 12.9, "lng": 122.0},
+          "cities": [
+            {"name": "Manila", "lat": 14.600, "lng": 120.984, "population": 1780148, "capital": true},
+            {"name": "Quezon City", "lat": 14.676, "lng": 121.044, "population": 2936116},
+            {"name": "Davao City", "lat": 7.191, "lng": 125.456, "population": 1632991},
+            {"name": "Cebu City", "lat": 10.317, "lng": 123.891, "population": 964169}
+          ]
+        },
+        {
+          "id": "MY", "name": "Malaysia", "capital": "Kuala Lumpur", "population": 32365999, "area_km2": 330803,
+          "center": {"lat": 4.2, "lng": 101.9},
+          "cities": [
+            {"name": "Kuala Lumpur", "lat": 3.139, "lng": 101.687, "population": 1982000, "capital": true},
+            {"name": "George Town", "lat": 5.415, "lng": 100.336, "population": 708127}
+          ]
+        },
+        {
+          "id": "SG", "name": "Singapore", "capital": "Singapore", "population": 5850342, "area_km2": 728,
+          "center": {"lat": 1.35, "lng": 103.8},
+          "cities": [
+            {"name": "Singapore", "lat": 1.352, "lng": 103.820, "population": 5850342, "capital": true}
+          ]
+        },
+        {
+          "id": "PK", "name": "Pakistan", "capital": "Islamabad", "population": 220892340, "area_km2": 881913,
+          "center": {"lat": 30.4, "lng": 69.3},
+          "subdivisions_type": "Provinces",
+          "subdivisions": [
+            {"id": "PK-PB", "name": "Punjab", "capital": "Lahore", "center": {"lat": 31.5, "lng": 72.5}},
+            {"id": "PK-SD", "name": "Sindh", "capital": "Karachi", "center": {"lat": 26.0, "lng": 69.0}},
+            {"id": "PK-KP", "name": "Khyber Pakhtunkhwa", "capital": "Peshawar", "center": {"lat": 35.0, "lng": 72.0}},
+            {"id": "PK-BA", "name": "Balochistan", "capital": "Quetta", "center": {"lat": 28.0, "lng": 66.0}}
+          ],
+          "cities": [
+            {"name": "Islamabad", "lat": 33.693, "lng": 73.039, "population": 1095064, "capital": true},
+            {"name": "Karachi", "lat": 24.861, "lng": 67.010, "population": 14910352},
+            {"name": "Lahore", "lat": 31.550, "lng": 74.341, "population": 11126285},
+            {"name": "Faisalabad", "lat": 31.418, "lng": 73.079, "population": 3203846}
+          ]
+        },
+        {
+          "id": "BD", "name": "Bangladesh", "capital": "Dhaka", "population": 164689383, "area_km2": 147570,
+          "center": {"lat": 23.7, "lng": 90.4},
+          "cities": [
+            {"name": "Dhaka", "lat": 23.811, "lng": 90.413, "population": 21006000, "capital": true},
+            {"name": "Chittagong", "lat": 22.357, "lng": 91.784, "population": 2592439}
+          ]
+        },
+        {
+          "id": "TR", "name": "Turkey", "capital": "Ankara", "population": 84339067, "area_km2": 783562,
+          "center": {"lat": 39.0, "lng": 35.2},
+          "cities": [
+            {"name": "Ankara", "lat": 39.934, "lng": 32.859, "population": 5663000, "capital": true},
+            {"name": "Istanbul", "lat": 41.009, "lng": 28.978, "population": 15462000},
+            {"name": "Izmir", "lat": 38.424, "lng": 27.143, "population": 4367251},
+            {"name": "Antalya", "lat": 36.897, "lng": 30.713, "population": 2511700}
+          ]
+        },
+        {
+          "id": "SA", "name": "Saudi Arabia", "capital": "Riyadh", "population": 34813871, "area_km2": 2149690,
+          "center": {"lat": 24.0, "lng": 45.0},
+          "cities": [
+            {"name": "Riyadh", "lat": 24.688, "lng": 46.722, "population": 7676654, "capital": true},
+            {"name": "Jeddah", "lat": 21.486, "lng": 39.177, "population": 4697000},
+            {"name": "Mecca", "lat": 21.423, "lng": 39.826, "population": 2042000},
+            {"name": "Medina", "lat": 24.471, "lng": 39.612, "population": 1488000}
+          ]
+        },
+        {
+          "id": "AE", "name": "United Arab Emirates", "capital": "Abu Dhabi", "population": 9890402, "area_km2": 83600,
+          "center": {"lat": 24.0, "lng": 54.0},
+          "subdivisions_type": "Emirates",
+          "subdivisions": [
+            {"id": "AE-AZ", "name": "Abu Dhabi", "capital": "Abu Dhabi", "center": {"lat": 24.5, "lng": 54.7}},
+            {"id": "AE-DU", "name": "Dubai", "capital": "Dubai", "center": {"lat": 25.3, "lng": 55.3}},
+            {"id": "AE-SH", "name": "Sharjah", "capital": "Sharjah", "center": {"lat": 25.3, "lng": 55.5}}
+          ],
+          "cities": [
+            {"name": "Abu Dhabi", "lat": 24.453, "lng": 54.378, "population": 1483000, "capital": true},
+            {"name": "Dubai", "lat": 25.205, "lng": 55.271, "population": 3400800}
+          ]
+        },
+        {
+          "id": "IL", "name": "Israel", "capital": "Jerusalem", "population": 8655535, "area_km2": 20770,
+          "center": {"lat": 31.0, "lng": 34.8},
+          "cities": [
+            {"name": "Jerusalem", "lat": 31.769, "lng": 35.216, "population": 936425, "capital": true},
+            {"name": "Tel Aviv", "lat": 32.084, "lng": 34.782, "population": 460613},
+            {"name": "Haifa", "lat": 32.794, "lng": 34.989, "population": 285316},
+            {"name": "Rishon LeZion", "lat": 31.971, "lng": 34.790, "population": 254384},
+            {"name": "Petah Tikva", "lat": 32.087, "lng": 34.888, "population": 247956}
+          ]
+        },
+        {
+          "id": "IQ", "name": "Iraq", "capital": "Baghdad", "population": 40222493, "area_km2": 438317,
+          "center": {"lat": 33.2, "lng": 43.7},
+          "cities": [
+            {"name": "Baghdad", "lat": 33.312, "lng": 44.366, "population": 7144000, "capital": true},
+            {"name": "Basra", "lat": 30.508, "lng": 47.814, "population": 1700000}
+          ]
+        },
+        {
+          "id": "IR", "name": "Iran", "capital": "Tehran", "population": 83992949, "area_km2": 1648195,
+          "center": {"lat": 32.4, "lng": 53.7},
+          "cities": [
+            {"name": "Tehran", "lat": 35.689, "lng": 51.389, "population": 8694000, "capital": true},
+            {"name": "Isfahan", "lat": 32.652, "lng": 51.678, "population": 1961260},
+            {"name": "Mashhad", "lat": 36.310, "lng": 59.599, "population": 3001184},
+            {"name": "Shiraz", "lat": 29.592, "lng": 52.584, "population": 1565572}
+          ]
+        },
+        {
+          "id": "KZ", "name": "Kazakhstan", "capital": "Astana", "population": 18776707, "area_km2": 2724900,
+          "center": {"lat": 48.0, "lng": 68.0},
+          "cities": [
+            {"name": "Astana", "lat": 51.128, "lng": 71.430, "population": 1136008, "capital": true},
+            {"name": "Almaty", "lat": 43.238, "lng": 76.946, "population": 1977011}
+          ]
+        },
+        {
+          "id": "UZ", "name": "Uzbekistan", "capital": "Tashkent", "population": 34558900, "area_km2": 447400,
+          "center": {"lat": 41.4, "lng": 64.6},
+          "cities": [
+            {"name": "Tashkent", "lat": 41.311, "lng": 69.280, "population": 2571668, "capital": true},
+            {"name": "Samarkand", "lat": 39.655, "lng": 66.960, "population": 513572}
+          ]
+        },
+        {
+          "id": "AF", "name": "Afghanistan", "capital": "Kabul", "population": 38928346, "area_km2": 652230,
+          "center": {"lat": 33.9, "lng": 67.7},
+          "cities": [
+            {"name": "Kabul", "lat": 34.526, "lng": 69.178, "population": 4222000, "capital": true}
+          ]
+        },
+        {
+          "id": "MM", "name": "Myanmar", "capital": "Naypyidaw", "population": 54409800, "area_km2": 676578,
+          "center": {"lat": 19.8, "lng": 96.0},
+          "cities": [
+            {"name": "Naypyidaw", "lat": 19.763, "lng": 96.079, "population": 1160242, "capital": true},
+            {"name": "Yangon", "lat": 16.866, "lng": 96.195, "population": 5160000}
+          ]
+        },
+        {
+          "id": "NP", "name": "Nepal", "capital": "Kathmandu", "population": 29136808, "area_km2": 147181,
+          "center": {"lat": 28.4, "lng": 84.1},
+          "cities": [{"name": "Kathmandu", "lat": 27.717, "lng": 85.324, "population": 1442271, "capital": true}]
+        },
+        {
+          "id": "LK", "name": "Sri Lanka", "capital": "Colombo", "population": 21413249, "area_km2": 65610,
+          "center": {"lat": 7.9, "lng": 80.8},
+          "cities": [{"name": "Colombo", "lat": 6.927, "lng": 79.861, "population": 752993, "capital": true}]
+        },
+        {
+          "id": "KH", "name": "Cambodia", "capital": "Phnom Penh", "population": 16718965, "area_km2": 181035,
+          "center": {"lat": 12.6, "lng": 105.0},
+          "cities": [{"name": "Phnom Penh", "lat": 11.557, "lng": 104.916, "population": 2129371, "capital": true}]
+        },
+        {
+          "id": "LA", "name": "Laos", "capital": "Vientiane", "population": 7275560, "area_km2": 236800,
+          "center": {"lat": 19.9, "lng": 102.5},
+          "cities": [{"name": "Vientiane", "lat": 17.967, "lng": 102.633, "population": 820940, "capital": true}]
+        },
+        {
+          "id": "MN", "name": "Mongolia", "capital": "Ulaanbaatar", "population": 3278290, "area_km2": 1564110,
+          "center": {"lat": 46.9, "lng": 103.8},
+          "cities": [{"name": "Ulaanbaatar", "lat": 47.887, "lng": 106.906, "population": 1466125, "capital": true}]
+        },
+        {
+          "id": "JO", "name": "Jordan", "capital": "Amman", "population": 10203134, "area_km2": 89342,
+          "center": {"lat": 30.6, "lng": 36.2},
+          "cities": [{"name": "Amman", "lat": 31.950, "lng": 35.933, "population": 2065000, "capital": true}]
+        },
+        {
+          "id": "LB", "name": "Lebanon", "capital": "Beirut", "population": 6825445, "area_km2": 10452,
+          "center": {"lat": 33.9, "lng": 35.9},
+          "cities": [{"name": "Beirut", "lat": 33.889, "lng": 35.495, "population": 2200000, "capital": true}]
+        },
+        {
+          "id": "KW", "name": "Kuwait", "capital": "Kuwait City", "population": 4270571, "area_km2": 17818,
+          "center": {"lat": 29.3, "lng": 47.5},
+          "cities": [{"name": "Kuwait City", "lat": 29.376, "lng": 47.977, "population": 2989000, "capital": true}]
+        },
+        {
+          "id": "QA", "name": "Qatar", "capital": "Doha", "population": 2881053, "area_km2": 11586,
+          "center": {"lat": 25.4, "lng": 51.2},
+          "cities": [{"name": "Doha", "lat": 25.286, "lng": 51.534, "population": 2382000, "capital": true}]
+        },
+        {
+          "id": "OM", "name": "Oman", "capital": "Muscat", "population": 5106626, "area_km2": 309500,
+          "center": {"lat": 21.5, "lng": 56.0},
+          "cities": [{"name": "Muscat", "lat": 23.588, "lng": 58.382, "population": 1421409, "capital": true}]
+        },
+        {
+          "id": "BH", "name": "Bahrain", "capital": "Manama", "population": 1701575, "area_km2": 765,
+          "center": {"lat": 26.0, "lng": 50.5},
+          "cities": [{"name": "Manama", "lat": 26.225, "lng": 50.586, "population": 411000, "capital": true}]
+        },
+        {
+          "id": "YE", "name": "Yemen", "capital": "Sanaa", "population": 29825964, "area_km2": 527968,
+          "center": {"lat": 15.5, "lng": 48.5},
+          "cities": [{"name": "Sanaa", "lat": 15.370, "lng": 44.191, "population": 2957000, "capital": true}]
+        },
+        {
+          "id": "SY", "name": "Syria", "capital": "Damascus", "population": 17500658, "area_km2": 185180,
+          "center": {"lat": 35.0, "lng": 38.0},
+          "cities": [{"name": "Damascus", "lat": 33.513, "lng": 36.292, "population": 2079000, "capital": true}]
+        },
+        {
+          "id": "GE", "name": "Georgia", "capital": "Tbilisi", "population": 3989167, "area_km2": 69700,
+          "center": {"lat": 42.3, "lng": 43.4},
+          "cities": [{"name": "Tbilisi", "lat": 41.693, "lng": 44.801, "population": 1082000, "capital": true}]
+        },
+        {
+          "id": "AM", "name": "Armenia", "capital": "Yerevan", "population": 2963243, "area_km2": 29743,
+          "center": {"lat": 40.1, "lng": 45.0},
+          "cities": [{"name": "Yerevan", "lat": 40.183, "lng": 44.515, "population": 1075800, "capital": true}]
+        },
+        {
+          "id": "AZ", "name": "Azerbaijan", "capital": "Baku", "population": 10139177, "area_km2": 86600,
+          "center": {"lat": 40.1, "lng": 47.6},
+          "cities": [{"name": "Baku", "lat": 40.409, "lng": 49.867, "population": 2293000, "capital": true}]
+        },
+        {
+          "id": "TM", "name": "Turkmenistan", "capital": "Ashgabat", "population": 6031200, "area_km2": 488100,
+          "center": {"lat": 38.9, "lng": 59.6},
+          "cities": [{"name": "Ashgabat", "lat": 37.950, "lng": 58.380, "population": 1032000, "capital": true}]
+        },
+        {
+          "id": "KG", "name": "Kyrgyzstan", "capital": "Bishkek", "population": 6524195, "area_km2": 199951,
+          "center": {"lat": 41.2, "lng": 74.8},
+          "cities": [{"name": "Bishkek", "lat": 42.875, "lng": 74.590, "population": 1012500, "capital": true}]
+        },
+        {
+          "id": "TJ", "name": "Tajikistan", "capital": "Dushanbe", "population": 9537645, "area_km2": 143100,
+          "center": {"lat": 38.9, "lng": 71.3},
+          "cities": [{"name": "Dushanbe", "lat": 38.560, "lng": 68.774, "population": 863400, "capital": true}]
+        },
+        {
+          "id": "RU", "name": "Russia", "capital": "Moscow", "population": 145934462, "area_km2": 17098242,
+          "center": {"lat": 61.5, "lng": 105.3},
+          "subdivisions_type": "Federal Districts",
+          "subdivisions": [
+            {"id": "RU-MOW", "name": "Central Federal District", "capital": "Moscow", "center": {"lat": 55.0, "lng": 38.0}},
+            {"id": "RU-SPE", "name": "Northwestern Federal District", "capital": "Saint Petersburg", "center": {"lat": 59.0, "lng": 33.0}},
+            {"id": "RU-SFD", "name": "Southern Federal District", "capital": "Rostov-on-Don", "center": {"lat": 45.0, "lng": 42.0}},
+            {"id": "RU-UFO", "name": "Urals Federal District", "capital": "Yekaterinburg", "center": {"lat": 58.0, "lng": 65.0}},
+            {"id": "RU-SIB", "name": "Siberian Federal District", "capital": "Novosibirsk", "center": {"lat": 55.0, "lng": 85.0}},
+            {"id": "RU-FER", "name": "Far Eastern Federal District", "capital": "Vladivostok", "center": {"lat": 55.0, "lng": 135.0}}
+          ],
+          "cities": [
+            {"name": "Moscow", "lat": 55.756, "lng": 37.617, "population": 12615882, "capital": true},
+            {"name": "Saint Petersburg", "lat": 59.934, "lng": 30.335, "population": 5383890},
+            {"name": "Novosibirsk", "lat": 55.008, "lng": 82.936, "population": 1625631},
+            {"name": "Yekaterinburg", "lat": 56.839, "lng": 60.607, "population": 1493749},
+            {"name": "Kazan", "lat": 55.796, "lng": 49.106, "population": 1257391},
+            {"name": "Vladivostok", "lat": 43.116, "lng": 131.874, "population": 605049}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "africa",
+      "name": "Africa",
+      "area_km2": 30370000,
+      "population": 1340598147,
+      "color": "#f39c12",
+      "center": {"lat": 1.0, "lng": 20.0},
+      "bounds": {"north": 37.3, "south": -35.0, "west": -18.0, "east": 52.0},
+      "countries": [
+        {
+          "id": "NG", "name": "Nigeria", "capital": "Abuja", "population": 206139589, "area_km2": 923768,
+          "center": {"lat": 9.1, "lng": 8.7},
+          "subdivisions_type": "States",
+          "subdivisions": [
+            {"id": "NG-LA", "name": "Lagos", "capital": "Ikeja", "center": {"lat": 6.5, "lng": 3.4}},
+            {"id": "NG-KN", "name": "Kano", "capital": "Kano", "center": {"lat": 12.0, "lng": 8.5}},
+            {"id": "NG-FC", "name": "Federal Capital Territory", "capital": "Abuja", "center": {"lat": 9.1, "lng": 7.5}}
+          ],
+          "cities": [
+            {"name": "Abuja", "lat": 9.058, "lng": 7.491, "population": 3464123, "capital": true},
+            {"name": "Lagos", "lat": 6.524, "lng": 3.380, "population": 15388000},
+            {"name": "Kano", "lat": 12.000, "lng": 8.517, "population": 3848885},
+            {"name": "Ibadan", "lat": 7.388, "lng": 3.893, "population": 3565108},
+            {"name": "Port Harcourt", "lat": 4.777, "lng": 7.013, "population": 1865000}
+          ]
+        },
+        {
+          "id": "EG", "name": "Egypt", "capital": "Cairo", "population": 102334404, "area_km2": 1002450,
+          "center": {"lat": 26.8, "lng": 30.8},
+          "cities": [
+            {"name": "Cairo", "lat": 30.044, "lng": 31.236, "population": 10230350, "capital": true},
+            {"name": "Alexandria", "lat": 31.200, "lng": 29.919, "population": 5200000},
+            {"name": "Giza", "lat": 30.009, "lng": 31.209, "population": 4367343},
+            {"name": "Luxor", "lat": 25.687, "lng": 32.639, "population": 507000}
+          ]
+        },
+        {
+          "id": "ZA", "name": "South Africa", "capital": "Pretoria", "population": 59308690, "area_km2": 1221037,
+          "center": {"lat": -29.0, "lng": 25.0},
+          "subdivisions_type": "Provinces",
+          "subdivisions": [
+            {"id": "ZA-GP", "name": "Gauteng", "capital": "Johannesburg", "center": {"lat": -26.3, "lng": 28.1}},
+            {"id": "ZA-WC", "name": "Western Cape", "capital": "Cape Town", "center": {"lat": -33.9, "lng": 18.5}},
+            {"id": "ZA-KZN", "name": "KwaZulu-Natal", "capital": "Pietermaritzburg", "center": {"lat": -29.0, "lng": 30.0}}
+          ],
+          "cities": [
+            {"name": "Pretoria", "lat": -25.746, "lng": 28.188, "population": 2472000, "capital": true},
+            {"name": "Johannesburg", "lat": -26.204, "lng": 28.048, "population": 5783000},
+            {"name": "Cape Town", "lat": -33.925, "lng": 18.424, "population": 4618000},
+            {"name": "Durban", "lat": -29.858, "lng": 31.029, "population": 3720953},
+            {"name": "Port Elizabeth", "lat": -33.918, "lng": 25.570, "population": 1263678}
+          ]
+        },
+        {
+          "id": "KE", "name": "Kenya", "capital": "Nairobi", "population": 53771296, "area_km2": 580367,
+          "center": {"lat": 0.0, "lng": 38.0},
+          "cities": [
+            {"name": "Nairobi", "lat": -1.286, "lng": 36.817, "population": 4734881, "capital": true},
+            {"name": "Mombasa", "lat": -4.043, "lng": 39.665, "population": 1208333}
+          ]
+        },
+        {
+          "id": "ET", "name": "Ethiopia", "capital": "Addis Ababa", "population": 114963588, "area_km2": 1104300,
+          "center": {"lat": 9.1, "lng": 40.5},
+          "cities": [
+            {"name": "Addis Ababa", "lat": 9.025, "lng": 38.747, "population": 3352000, "capital": true}
+          ]
+        },
+        {
+          "id": "TZ", "name": "Tanzania", "capital": "Dodoma", "population": 59734218, "area_km2": 947303,
+          "center": {"lat": -6.4, "lng": 34.9},
+          "cities": [
+            {"name": "Dodoma", "lat": -6.162, "lng": 35.750, "population": 410956, "capital": true},
+            {"name": "Dar es Salaam", "lat": -6.792, "lng": 39.208, "population": 6702000}
+          ]
+        },
+        {
+          "id": "GH", "name": "Ghana", "capital": "Accra", "population": 31072940, "area_km2": 238533,
+          "center": {"lat": 7.9, "lng": -1.0},
+          "cities": [
+            {"name": "Accra", "lat": 5.603, "lng": -0.187, "population": 2291352, "capital": true},
+            {"name": "Kumasi", "lat": 6.688, "lng": -1.624, "population": 3065000}
+          ]
+        },
+        {
+          "id": "DZ", "name": "Algeria", "capital": "Algiers", "population": 43851044, "area_km2": 2381741,
+          "center": {"lat": 28.0, "lng": 1.7},
+          "cities": [{"name": "Algiers", "lat": 36.753, "lng": 3.058, "population": 3416000, "capital": true}]
+        },
+        {
+          "id": "MA", "name": "Morocco", "capital": "Rabat", "population": 36910560, "area_km2": 446550,
+          "center": {"lat": 32.0, "lng": -5.0},
+          "cities": [
+            {"name": "Rabat", "lat": 34.020, "lng": -6.836, "population": 577827, "capital": true},
+            {"name": "Casablanca", "lat": 33.573, "lng": -7.589, "population": 3752000},
+            {"name": "Marrakech", "lat": 31.630, "lng": -8.009, "population": 928850}
+          ]
+        },
+        {
+          "id": "TN", "name": "Tunisia", "capital": "Tunis", "population": 11818619, "area_km2": 163610,
+          "center": {"lat": 34.0, "lng": 9.0},
+          "cities": [{"name": "Tunis", "lat": 36.807, "lng": 10.182, "population": 1056247, "capital": true}]
+        },
+        {
+          "id": "LY", "name": "Libya", "capital": "Tripoli", "population": 6871292, "area_km2": 1759540,
+          "center": {"lat": 26.3, "lng": 17.2},
+          "cities": [{"name": "Tripoli", "lat": 32.896, "lng": 13.180, "population": 1126000, "capital": true}]
+        },
+        {
+          "id": "CD", "name": "Democratic Republic of the Congo", "capital": "Kinshasa", "population": 89561403, "area_km2": 2344858,
+          "center": {"lat": -4.0, "lng": 22.0},
+          "cities": [{"name": "Kinshasa", "lat": -4.441, "lng": 15.266, "population": 14342000, "capital": true}]
+        },
+        {
+          "id": "AO", "name": "Angola", "capital": "Luanda", "population": 32866272, "area_km2": 1246700,
+          "center": {"lat": -12.5, "lng": 18.5},
+          "cities": [{"name": "Luanda", "lat": -8.839, "lng": 13.289, "population": 8330000, "capital": true}]
+        },
+        {
+          "id": "MZ", "name": "Mozambique", "capital": "Maputo", "population": 31255435, "area_km2": 801590,
+          "center": {"lat": -18.7, "lng": 35.5},
+          "cities": [{"name": "Maputo", "lat": -25.966, "lng": 32.569, "population": 1101170, "capital": true}]
+        },
+        {
+          "id": "MG", "name": "Madagascar", "capital": "Antananarivo", "population": 27691018, "area_km2": 587041,
+          "center": {"lat": -18.8, "lng": 46.9},
+          "cities": [{"name": "Antananarivo", "lat": -18.880, "lng": 47.508, "population": 1391433, "capital": true}]
+        },
+        {
+          "id": "CM", "name": "Cameroon", "capital": "Yaoundé", "population": 26545863, "area_km2": 475442,
+          "center": {"lat": 7.4, "lng": 12.4},
+          "cities": [
+            {"name": "Yaoundé", "lat": 3.848, "lng": 11.502, "population": 3822000, "capital": true},
+            {"name": "Douala", "lat": 4.051, "lng": 9.768, "population": 2768400}
+          ]
+        },
+        {
+          "id": "CI", "name": "Côte d'Ivoire", "capital": "Yamoussoukro", "population": 26378274, "area_km2": 322463,
+          "center": {"lat": 7.5, "lng": -5.5},
+          "cities": [
+            {"name": "Yamoussoukro", "lat": 6.827, "lng": -5.276, "population": 231000, "capital": true},
+            {"name": "Abidjan", "lat": 5.360, "lng": -4.009, "population": 5616633}
+          ]
+        },
+        {
+          "id": "NE", "name": "Niger", "capital": "Niamey", "population": 24206644, "area_km2": 1267000,
+          "center": {"lat": 17.6, "lng": 8.1},
+          "cities": [{"name": "Niamey", "lat": 13.512, "lng": 2.125, "population": 1214000, "capital": true}]
+        },
+        {
+          "id": "ML", "name": "Mali", "capital": "Bamako", "population": 20250833, "area_km2": 1240192,
+          "center": {"lat": 17.6, "lng": -4.0},
+          "cities": [{"name": "Bamako", "lat": 12.639, "lng": -8.003, "population": 2009000, "capital": true}]
+        },
+        {
+          "id": "SN", "name": "Senegal", "capital": "Dakar", "population": 16743927, "area_km2": 196722,
+          "center": {"lat": 14.5, "lng": -14.5},
+          "cities": [{"name": "Dakar", "lat": 14.764, "lng": -17.366, "population": 1056009, "capital": true}]
+        },
+        {
+          "id": "UG", "name": "Uganda", "capital": "Kampala", "population": 45741007, "area_km2": 241038,
+          "center": {"lat": 1.4, "lng": 32.3},
+          "cities": [{"name": "Kampala", "lat": 0.348, "lng": 32.575, "population": 1680600, "capital": true}]
+        },
+        {
+          "id": "ZM", "name": "Zambia", "capital": "Lusaka", "population": 18383955, "area_km2": 752612,
+          "center": {"lat": -13.1, "lng": 27.8},
+          "cities": [{"name": "Lusaka", "lat": -15.391, "lng": 28.323, "population": 2731000, "capital": true}]
+        },
+        {
+          "id": "ZW", "name": "Zimbabwe", "capital": "Harare", "population": 14862924, "area_km2": 390757,
+          "center": {"lat": -20.0, "lng": 30.0},
+          "cities": [{"name": "Harare", "lat": -17.832, "lng": 31.053, "population": 1542813, "capital": true}]
+        },
+        {
+          "id": "RW", "name": "Rwanda", "capital": "Kigali", "population": 12952218, "area_km2": 26338,
+          "center": {"lat": -2.0, "lng": 29.9},
+          "cities": [{"name": "Kigali", "lat": -1.944, "lng": 30.059, "population": 1132686, "capital": true}]
+        },
+        {
+          "id": "SD", "name": "Sudan", "capital": "Khartoum", "population": 43849260, "area_km2": 1861484,
+          "center": {"lat": 12.9, "lng": 30.2},
+          "cities": [{"name": "Khartoum", "lat": 15.601, "lng": 32.536, "population": 5274321, "capital": true}]
+        },
+        {
+          "id": "SS", "name": "South Sudan", "capital": "Juba", "population": 11193725, "area_km2": 619745,
+          "center": {"lat": 6.9, "lng": 31.3},
+          "cities": [{"name": "Juba", "lat": 4.852, "lng": 31.571, "population": 450000, "capital": true}]
+        },
+        {
+          "id": "BW", "name": "Botswana", "capital": "Gaborone", "population": 2351627, "area_km2": 581730,
+          "center": {"lat": -22.3, "lng": 24.7},
+          "cities": [{"name": "Gaborone", "lat": -24.654, "lng": 25.912, "population": 231626, "capital": true}]
+        },
+        {
+          "id": "NA", "name": "Namibia", "capital": "Windhoek", "population": 2540905, "area_km2": 825615,
+          "center": {"lat": -22.0, "lng": 17.1},
+          "cities": [{"name": "Windhoek", "lat": -22.559, "lng": 17.083, "population": 325858, "capital": true}]
+        }
+      ]
+    },
+    {
+      "id": "americas",
+      "name": "Americas",
+      "area_km2": 42549000,
+      "population": 1013480000,
+      "color": "#3498db",
+      "center": {"lat": 15.0, "lng": -80.0},
+      "bounds": {"north": 72.0, "south": -55.0, "west": -170.0, "east": -34.0},
+      "countries": [
+        {
+          "id": "US", "name": "United States", "capital": "Washington, D.C.", "population": 331002651, "area_km2": 9833520,
+          "center": {"lat": 37.1, "lng": -95.7},
+          "subdivisions_type": "States",
+          "subdivisions": [
+            {"id": "US-CA", "name": "California", "capital": "Sacramento", "center": {"lat": 36.8, "lng": -119.4}},
+            {"id": "US-TX", "name": "Texas", "capital": "Austin", "center": {"lat": 31.0, "lng": -99.9}},
+            {"id": "US-FL", "name": "Florida", "capital": "Tallahassee", "center": {"lat": 28.6, "lng": -81.5}},
+            {"id": "US-NY", "name": "New York", "capital": "Albany", "center": {"lat": 43.0, "lng": -75.0}},
+            {"id": "US-PA", "name": "Pennsylvania", "capital": "Harrisburg", "center": {"lat": 41.2, "lng": -77.2}},
+            {"id": "US-IL", "name": "Illinois", "capital": "Springfield", "center": {"lat": 40.6, "lng": -89.3}},
+            {"id": "US-OH", "name": "Ohio", "capital": "Columbus", "center": {"lat": 40.4, "lng": -82.7}},
+            {"id": "US-GA", "name": "Georgia", "capital": "Atlanta", "center": {"lat": 32.2, "lng": -83.6}},
+            {"id": "US-NC", "name": "North Carolina", "capital": "Raleigh", "center": {"lat": 35.8, "lng": -80.0}},
+            {"id": "US-MI", "name": "Michigan", "capital": "Lansing", "center": {"lat": 44.3, "lng": -85.6}},
+            {"id": "US-NJ", "name": "New Jersey", "capital": "Trenton", "center": {"lat": 40.1, "lng": -74.7}},
+            {"id": "US-VA", "name": "Virginia", "capital": "Richmond", "center": {"lat": 37.4, "lng": -78.7}},
+            {"id": "US-WA", "name": "Washington", "capital": "Olympia", "center": {"lat": 47.4, "lng": -120.7}},
+            {"id": "US-AZ", "name": "Arizona", "capital": "Phoenix", "center": {"lat": 34.3, "lng": -111.1}},
+            {"id": "US-MA", "name": "Massachusetts", "capital": "Boston", "center": {"lat": 42.4, "lng": -71.4}},
+            {"id": "US-TN", "name": "Tennessee", "capital": "Nashville", "center": {"lat": 35.5, "lng": -86.6}},
+            {"id": "US-IN", "name": "Indiana", "capital": "Indianapolis", "center": {"lat": 40.3, "lng": -86.1}},
+            {"id": "US-MO", "name": "Missouri", "capital": "Jefferson City", "center": {"lat": 38.6, "lng": -92.6}},
+            {"id": "US-MD", "name": "Maryland", "capital": "Annapolis", "center": {"lat": 39.0, "lng": -76.6}},
+            {"id": "US-WI", "name": "Wisconsin", "capital": "Madison", "center": {"lat": 43.8, "lng": -88.8}},
+            {"id": "US-CO", "name": "Colorado", "capital": "Denver", "center": {"lat": 39.1, "lng": -105.4}},
+            {"id": "US-MN", "name": "Minnesota", "capital": "Saint Paul", "center": {"lat": 46.7, "lng": -94.7}},
+            {"id": "US-SC", "name": "South Carolina", "capital": "Columbia", "center": {"lat": 33.8, "lng": -81.2}},
+            {"id": "US-AL", "name": "Alabama", "capital": "Montgomery", "center": {"lat": 32.3, "lng": -86.9}},
+            {"id": "US-LA", "name": "Louisiana", "capital": "Baton Rouge", "center": {"lat": 30.9, "lng": -92.0}},
+            {"id": "US-KY", "name": "Kentucky", "capital": "Frankfort", "center": {"lat": 37.8, "lng": -84.3}},
+            {"id": "US-OR", "name": "Oregon", "capital": "Salem", "center": {"lat": 43.8, "lng": -120.6}},
+            {"id": "US-OK", "name": "Oklahoma", "capital": "Oklahoma City", "center": {"lat": 35.0, "lng": -97.1}},
+            {"id": "US-CT", "name": "Connecticut", "capital": "Hartford", "center": {"lat": 41.6, "lng": -72.7}},
+            {"id": "US-UT", "name": "Utah", "capital": "Salt Lake City", "center": {"lat": 39.3, "lng": -111.1}},
+            {"id": "US-NV", "name": "Nevada", "capital": "Carson City", "center": {"lat": 38.8, "lng": -116.4}},
+            {"id": "US-AR", "name": "Arkansas", "capital": "Little Rock", "center": {"lat": 35.2, "lng": -92.2}},
+            {"id": "US-MS", "name": "Mississippi", "capital": "Jackson", "center": {"lat": 32.3, "lng": -89.6}},
+            {"id": "US-KS", "name": "Kansas", "capital": "Topeka", "center": {"lat": 38.5, "lng": -98.8}},
+            {"id": "US-NM", "name": "New Mexico", "capital": "Santa Fe", "center": {"lat": 34.5, "lng": -106.2}},
+            {"id": "US-NE", "name": "Nebraska", "capital": "Lincoln", "center": {"lat": 41.1, "lng": -99.0}},
+            {"id": "US-HI", "name": "Hawaii", "capital": "Honolulu", "center": {"lat": 19.9, "lng": -155.6}},
+            {"id": "US-WV", "name": "West Virginia", "capital": "Charleston", "center": {"lat": 38.6, "lng": -80.6}},
+            {"id": "US-ID", "name": "Idaho", "capital": "Boise", "center": {"lat": 44.2, "lng": -114.7}},
+            {"id": "US-ME", "name": "Maine", "capital": "Augusta", "center": {"lat": 45.3, "lng": -69.4}},
+            {"id": "US-NH", "name": "New Hampshire", "capital": "Concord", "center": {"lat": 43.2, "lng": -71.6}},
+            {"id": "US-MT", "name": "Montana", "capital": "Helena", "center": {"lat": 46.8, "lng": -110.4}},
+            {"id": "US-RI", "name": "Rhode Island", "capital": "Providence", "center": {"lat": 41.6, "lng": -71.5}},
+            {"id": "US-DE", "name": "Delaware", "capital": "Dover", "center": {"lat": 39.3, "lng": -75.5}},
+            {"id": "US-SD", "name": "South Dakota", "capital": "Pierre", "center": {"lat": 43.9, "lng": -99.4}},
+            {"id": "US-ND", "name": "North Dakota", "capital": "Bismarck", "center": {"lat": 47.5, "lng": -100.5}},
+            {"id": "US-AK", "name": "Alaska", "capital": "Juneau", "center": {"lat": 64.2, "lng": -152.5}},
+            {"id": "US-VT", "name": "Vermont", "capital": "Montpelier", "center": {"lat": 44.0, "lng": -72.7}},
+            {"id": "US-WY", "name": "Wyoming", "capital": "Cheyenne", "center": {"lat": 43.1, "lng": -107.6}},
+            {"id": "US-DC", "name": "District of Columbia", "capital": "Washington", "center": {"lat": 38.9, "lng": -77.0}}
+          ],
+          "cities": [
+            {"name": "Washington, D.C.", "lat": 38.907, "lng": -77.037, "population": 689545, "capital": true},
+            {"name": "New York", "lat": 40.713, "lng": -74.006, "population": 8336817},
+            {"name": "Los Angeles", "lat": 34.052, "lng": -118.244, "population": 3979576},
+            {"name": "Chicago", "lat": 41.878, "lng": -87.630, "population": 2693976},
+            {"name": "Houston", "lat": 29.760, "lng": -95.370, "population": 2320268},
+            {"name": "Phoenix", "lat": 33.449, "lng": -112.074, "population": 1680992},
+            {"name": "Philadelphia", "lat": 39.953, "lng": -75.164, "population": 1584064},
+            {"name": "San Antonio", "lat": 29.425, "lng": -98.495, "population": 1547253},
+            {"name": "San Diego", "lat": 32.716, "lng": -117.161, "population": 1423851},
+            {"name": "Dallas", "lat": 32.777, "lng": -96.797, "population": 1343573},
+            {"name": "San Francisco", "lat": 37.775, "lng": -122.419, "population": 873965},
+            {"name": "Seattle", "lat": 47.606, "lng": -122.332, "population": 737015},
+            {"name": "Denver", "lat": 39.739, "lng": -104.991, "population": 715522},
+            {"name": "Boston", "lat": 42.361, "lng": -71.058, "population": 694583},
+            {"name": "Miami", "lat": 25.762, "lng": -80.192, "population": 467963},
+            {"name": "Atlanta", "lat": 33.749, "lng": -84.388, "population": 498715},
+            {"name": "Las Vegas", "lat": 36.169, "lng": -115.140, "population": 651319}
+          ]
+        },
+        {
+          "id": "CA", "name": "Canada", "capital": "Ottawa", "population": 37742154, "area_km2": 9984670,
+          "center": {"lat": 56.1, "lng": -106.3},
+          "subdivisions_type": "Provinces & Territories",
+          "subdivisions": [
+            {"id": "CA-ON", "name": "Ontario", "capital": "Toronto", "center": {"lat": 51.3, "lng": -85.3}},
+            {"id": "CA-QC", "name": "Quebec", "capital": "Quebec City", "center": {"lat": 52.9, "lng": -73.5}},
+            {"id": "CA-BC", "name": "British Columbia", "capital": "Victoria", "center": {"lat": 53.7, "lng": -127.6}},
+            {"id": "CA-AB", "name": "Alberta", "capital": "Edmonton", "center": {"lat": 53.9, "lng": -116.6}},
+            {"id": "CA-MB", "name": "Manitoba", "capital": "Winnipeg", "center": {"lat": 53.8, "lng": -98.8}},
+            {"id": "CA-SK", "name": "Saskatchewan", "capital": "Regina", "center": {"lat": 52.9, "lng": -106.5}},
+            {"id": "CA-NS", "name": "Nova Scotia", "capital": "Halifax", "center": {"lat": 44.7, "lng": -63.7}},
+            {"id": "CA-NB", "name": "New Brunswick", "capital": "Fredericton", "center": {"lat": 46.5, "lng": -66.2}},
+            {"id": "CA-NL", "name": "Newfoundland and Labrador", "capital": "St. John's", "center": {"lat": 53.1, "lng": -57.7}},
+            {"id": "CA-PE", "name": "Prince Edward Island", "capital": "Charlottetown", "center": {"lat": 46.5, "lng": -63.4}},
+            {"id": "CA-NT", "name": "Northwest Territories", "capital": "Yellowknife", "center": {"lat": 64.8, "lng": -124.8}},
+            {"id": "CA-YT", "name": "Yukon", "capital": "Whitehorse", "center": {"lat": 64.3, "lng": -135.0}},
+            {"id": "CA-NU", "name": "Nunavut", "capital": "Iqaluit", "center": {"lat": 70.3, "lng": -86.0}}
+          ],
+          "cities": [
+            {"name": "Ottawa", "lat": 45.421, "lng": -75.690, "population": 994837, "capital": true},
+            {"name": "Toronto", "lat": 43.653, "lng": -79.383, "population": 2930000},
+            {"name": "Montreal", "lat": 45.502, "lng": -73.567, "population": 1780000},
+            {"name": "Vancouver", "lat": 49.283, "lng": -123.121, "population": 675218},
+            {"name": "Calgary", "lat": 51.048, "lng": -114.058, "population": 1239220},
+            {"name": "Edmonton", "lat": 53.546, "lng": -113.494, "population": 981280},
+            {"name": "Winnipeg", "lat": 49.895, "lng": -97.138, "population": 749607},
+            {"name": "Quebec City", "lat": 46.814, "lng": -71.208, "population": 531902}
+          ]
+        },
+        {
+          "id": "MX", "name": "Mexico", "capital": "Mexico City", "population": 128932753, "area_km2": 1964375,
+          "center": {"lat": 23.6, "lng": -102.5},
+          "subdivisions_type": "States",
+          "subdivisions": [
+            {"id": "MX-CMX", "name": "Mexico City", "capital": "Mexico City", "center": {"lat": 19.4, "lng": -99.1}},
+            {"id": "MX-JAL", "name": "Jalisco", "capital": "Guadalajara", "center": {"lat": 20.6, "lng": -103.3}},
+            {"id": "MX-NLE", "name": "Nuevo León", "capital": "Monterrey", "center": {"lat": 25.6, "lng": -99.9}},
+            {"id": "MX-VER", "name": "Veracruz", "capital": "Xalapa", "center": {"lat": 19.4, "lng": -96.4}},
+            {"id": "MX-PUE", "name": "Puebla", "capital": "Puebla", "center": {"lat": 19.0, "lng": -98.2}}
+          ],
+          "cities": [
+            {"name": "Mexico City", "lat": 19.432, "lng": -99.133, "population": 9209944, "capital": true},
+            {"name": "Guadalajara", "lat": 20.659, "lng": -103.349, "population": 1495189},
+            {"name": "Monterrey", "lat": 25.687, "lng": -100.317, "population": 1142994},
+            {"name": "Puebla", "lat": 19.044, "lng": -98.198, "population": 1576259},
+            {"name": "Tijuana", "lat": 32.515, "lng": -117.038, "population": 1810645},
+            {"name": "Cancún", "lat": 21.161, "lng": -86.852, "population": 888797}
+          ]
+        },
+        {
+          "id": "BR", "name": "Brazil", "capital": "Brasília", "population": 212559417, "area_km2": 8515767,
+          "center": {"lat": -14.2, "lng": -51.9},
+          "subdivisions_type": "States",
+          "subdivisions": [
+            {"id": "BR-SP", "name": "São Paulo", "capital": "São Paulo", "center": {"lat": -22.0, "lng": -49.3}},
+            {"id": "BR-RJ", "name": "Rio de Janeiro", "capital": "Rio de Janeiro", "center": {"lat": -22.3, "lng": -43.0}},
+            {"id": "BR-MG", "name": "Minas Gerais", "capital": "Belo Horizonte", "center": {"lat": -18.5, "lng": -44.3}},
+            {"id": "BR-BA", "name": "Bahia", "capital": "Salvador", "center": {"lat": -12.6, "lng": -41.7}},
+            {"id": "BR-AM", "name": "Amazonas", "capital": "Manaus", "center": {"lat": -3.4, "lng": -65.9}},
+            {"id": "BR-RS", "name": "Rio Grande do Sul", "capital": "Porto Alegre", "center": {"lat": -29.1, "lng": -53.2}},
+            {"id": "BR-DF", "name": "Federal District", "capital": "Brasília", "center": {"lat": -15.8, "lng": -47.9}}
+          ],
+          "cities": [
+            {"name": "Brasília", "lat": -15.780, "lng": -47.929, "population": 3055149, "capital": true},
+            {"name": "São Paulo", "lat": -23.551, "lng": -46.633, "population": 12325232},
+            {"name": "Rio de Janeiro", "lat": -22.907, "lng": -43.173, "population": 6748000},
+            {"name": "Salvador", "lat": -12.972, "lng": -38.512, "population": 2886698},
+            {"name": "Fortaleza", "lat": -3.717, "lng": -38.543, "population": 2686612},
+            {"name": "Belo Horizonte", "lat": -19.917, "lng": -43.935, "population": 2521564},
+            {"name": "Manaus", "lat": -3.119, "lng": -60.022, "population": 2219580},
+            {"name": "Curitiba", "lat": -25.429, "lng": -49.271, "population": 1948626},
+            {"name": "Recife", "lat": -8.048, "lng": -34.877, "population": 1653461},
+            {"name": "Porto Alegre", "lat": -30.033, "lng": -51.230, "population": 1484941}
+          ]
+        },
+        {
+          "id": "AR", "name": "Argentina", "capital": "Buenos Aires", "population": 45195774, "area_km2": 2780400,
+          "center": {"lat": -38.4, "lng": -63.6},
+          "subdivisions_type": "Provinces",
+          "subdivisions": [
+            {"id": "AR-C", "name": "Buenos Aires (City)", "capital": "Buenos Aires", "center": {"lat": -34.6, "lng": -58.4}},
+            {"id": "AR-B", "name": "Buenos Aires (Province)", "capital": "La Plata", "center": {"lat": -36.8, "lng": -60.0}},
+            {"id": "AR-X", "name": "Córdoba", "capital": "Córdoba", "center": {"lat": -31.4, "lng": -64.2}},
+            {"id": "AR-S", "name": "Santa Fe", "capital": "Santa Fe", "center": {"lat": -31.0, "lng": -60.7}},
+            {"id": "AR-A", "name": "Salta", "capital": "Salta", "center": {"lat": -24.8, "lng": -65.4}}
+          ],
+          "cities": [
+            {"name": "Buenos Aires", "lat": -34.604, "lng": -58.382, "population": 2891082, "capital": true},
+            {"name": "Córdoba", "lat": -31.420, "lng": -64.189, "population": 1329604},
+            {"name": "Rosario", "lat": -32.947, "lng": -60.639, "population": 1193605},
+            {"name": "Mendoza", "lat": -32.890, "lng": -68.844, "population": 1086633},
+            {"name": "Tucumán", "lat": -26.808, "lng": -65.218, "population": 800000}
+          ]
+        },
+        {
+          "id": "CO", "name": "Colombia", "capital": "Bogotá", "population": 50882891, "area_km2": 1141748,
+          "center": {"lat": 4.6, "lng": -74.3},
+          "cities": [
+            {"name": "Bogotá", "lat": 4.711, "lng": -74.072, "population": 7181469, "capital": true},
+            {"name": "Medellín", "lat": 6.245, "lng": -75.574, "population": 2569007},
+            {"name": "Cali", "lat": 3.451, "lng": -76.532, "population": 2227642},
+            {"name": "Barranquilla", "lat": 10.964, "lng": -74.796, "population": 1274250},
+            {"name": "Cartagena", "lat": 10.391, "lng": -75.514, "population": 1036134}
+          ]
+        },
+        {
+          "id": "PE", "name": "Peru", "capital": "Lima", "population": 32971854, "area_km2": 1285216,
+          "center": {"lat": -9.2, "lng": -75.0},
+          "cities": [
+            {"name": "Lima", "lat": -12.046, "lng": -77.043, "population": 10719000, "capital": true},
+            {"name": "Arequipa", "lat": -16.409, "lng": -71.537, "population": 1008290},
+            {"name": "Cusco", "lat": -13.532, "lng": -71.968, "population": 428450}
+          ]
+        },
+        {
+          "id": "VE", "name": "Venezuela", "capital": "Caracas", "population": 28435940, "area_km2": 916445,
+          "center": {"lat": 6.4, "lng": -66.6},
+          "cities": [
+            {"name": "Caracas", "lat": 10.481, "lng": -66.904, "population": 2935744, "capital": true},
+            {"name": "Maracaibo", "lat": 10.642, "lng": -71.606, "population": 2658355}
+          ]
+        },
+        {
+          "id": "CL", "name": "Chile", "capital": "Santiago", "population": 19116201, "area_km2": 756102,
+          "center": {"lat": -35.7, "lng": -71.5},
+          "cities": [
+            {"name": "Santiago", "lat": -33.449, "lng": -70.669, "population": 5614000, "capital": true},
+            {"name": "Valparaíso", "lat": -33.047, "lng": -71.613, "population": 284630}
+          ]
+        },
+        {
+          "id": "EC", "name": "Ecuador", "capital": "Quito", "population": 17643054, "area_km2": 283561,
+          "center": {"lat": -1.8, "lng": -78.2},
+          "cities": [
+            {"name": "Quito", "lat": -0.180, "lng": -78.468, "population": 1978376, "capital": true},
+            {"name": "Guayaquil", "lat": -2.170, "lng": -79.922, "population": 2698077}
+          ]
+        },
+        {
+          "id": "BO", "name": "Bolivia", "capital": "La Paz", "population": 11673021, "area_km2": 1098581,
+          "center": {"lat": -16.3, "lng": -63.6},
+          "cities": [
+            {"name": "La Paz", "lat": -16.490, "lng": -68.119, "population": 816044, "capital": true},
+            {"name": "Santa Cruz", "lat": -17.783, "lng": -63.182, "population": 1749436}
+          ]
+        },
+        {
+          "id": "PY", "name": "Paraguay", "capital": "Asunción", "population": 7132538, "area_km2": 406752,
+          "center": {"lat": -23.4, "lng": -58.4},
+          "cities": [{"name": "Asunción", "lat": -25.264, "lng": -57.576, "population": 525294, "capital": true}]
+        },
+        {
+          "id": "UY", "name": "Uruguay", "capital": "Montevideo", "population": 3473730, "area_km2": 176215,
+          "center": {"lat": -32.5, "lng": -55.8},
+          "cities": [{"name": "Montevideo", "lat": -34.901, "lng": -56.164, "population": 1319108, "capital": true}]
+        },
+        {
+          "id": "CU", "name": "Cuba", "capital": "Havana", "population": 11326616, "area_km2": 109884,
+          "center": {"lat": 21.5, "lng": -79.0},
+          "cities": [{"name": "Havana", "lat": 23.114, "lng": -82.367, "population": 2131480, "capital": true}]
+        },
+        {
+          "id": "DO", "name": "Dominican Republic", "capital": "Santo Domingo", "population": 10847910, "area_km2": 48671,
+          "center": {"lat": 18.7, "lng": -70.2},
+          "cities": [{"name": "Santo Domingo", "lat": 18.474, "lng": -69.892, "population": 2945353, "capital": true}]
+        },
+        {
+          "id": "HT", "name": "Haiti", "capital": "Port-au-Prince", "population": 11402528, "area_km2": 27750,
+          "center": {"lat": 18.9, "lng": -72.3},
+          "cities": [{"name": "Port-au-Prince", "lat": 18.541, "lng": -72.336, "population": 987310, "capital": true}]
+        },
+        {
+          "id": "JM", "name": "Jamaica", "capital": "Kingston", "population": 2961167, "area_km2": 10991,
+          "center": {"lat": 18.1, "lng": -77.3},
+          "cities": [{"name": "Kingston", "lat": 18.017, "lng": -76.809, "population": 937700, "capital": true}]
+        },
+        {
+          "id": "GT", "name": "Guatemala", "capital": "Guatemala City", "population": 17915568, "area_km2": 108889,
+          "center": {"lat": 15.8, "lng": -90.2},
+          "cities": [{"name": "Guatemala City", "lat": 14.634, "lng": -90.549, "population": 2450212, "capital": true}]
+        },
+        {
+          "id": "HN", "name": "Honduras", "capital": "Tegucigalpa", "population": 9904607, "area_km2": 112492,
+          "center": {"lat": 15.2, "lng": -86.2},
+          "cities": [{"name": "Tegucigalpa", "lat": 14.073, "lng": -87.192, "population": 1157509, "capital": true}]
+        },
+        {
+          "id": "SV", "name": "El Salvador", "capital": "San Salvador", "population": 6486205, "area_km2": 21041,
+          "center": {"lat": 13.8, "lng": -88.9},
+          "cities": [{"name": "San Salvador", "lat": 13.699, "lng": -89.191, "population": 525990, "capital": true}]
+        },
+        {
+          "id": "NI", "name": "Nicaragua", "capital": "Managua", "population": 6624554, "area_km2": 130373,
+          "center": {"lat": 12.9, "lng": -85.2},
+          "cities": [{"name": "Managua", "lat": 12.136, "lng": -86.251, "population": 1042641, "capital": true}]
+        },
+        {
+          "id": "CR", "name": "Costa Rica", "capital": "San José", "population": 5094118, "area_km2": 51100,
+          "center": {"lat": 9.7, "lng": -83.8},
+          "cities": [{"name": "San José", "lat": 9.928, "lng": -84.088, "population": 339581, "capital": true}]
+        },
+        {
+          "id": "PA", "name": "Panama", "capital": "Panama City", "population": 4314767, "area_km2": 75417,
+          "center": {"lat": 8.5, "lng": -80.8},
+          "cities": [{"name": "Panama City", "lat": 8.984, "lng": -79.519, "population": 880691, "capital": true}]
+        }
+      ]
+    },
+    {
+      "id": "oceania",
+      "name": "Oceania",
+      "area_km2": 8525989,
+      "population": 42677813,
+      "color": "#9b59b6",
+      "center": {"lat": -22.0, "lng": 140.0},
+      "bounds": {"north": -0.5, "south": -47.0, "west": 110.0, "east": 180.0},
+      "countries": [
+        {
+          "id": "AU", "name": "Australia", "capital": "Canberra", "population": 25499884, "area_km2": 7692024,
+          "center": {"lat": -25.3, "lng": 133.8},
+          "subdivisions_type": "States & Territories",
+          "subdivisions": [
+            {"id": "AU-NSW", "name": "New South Wales", "capital": "Sydney", "center": {"lat": -31.8, "lng": 147.3}},
+            {"id": "AU-VIC", "name": "Victoria", "capital": "Melbourne", "center": {"lat": -36.9, "lng": 145.0}},
+            {"id": "AU-QLD", "name": "Queensland", "capital": "Brisbane", "center": {"lat": -20.9, "lng": 142.7}},
+            {"id": "AU-WA", "name": "Western Australia", "capital": "Perth", "center": {"lat": -25.0, "lng": 122.8}},
+            {"id": "AU-SA", "name": "South Australia", "capital": "Adelaide", "center": {"lat": -30.0, "lng": 136.2}},
+            {"id": "AU-TAS", "name": "Tasmania", "capital": "Hobart", "center": {"lat": -42.0, "lng": 146.3}},
+            {"id": "AU-NT", "name": "Northern Territory", "capital": "Darwin", "center": {"lat": -19.5, "lng": 133.8}},
+            {"id": "AU-ACT", "name": "Australian Capital Territory", "capital": "Canberra", "center": {"lat": -35.5, "lng": 149.0}}
+          ],
+          "cities": [
+            {"name": "Canberra", "lat": -35.282, "lng": 149.129, "population": 462213, "capital": true},
+            {"name": "Sydney", "lat": -33.869, "lng": 151.209, "population": 5312163},
+            {"name": "Melbourne", "lat": -37.814, "lng": 144.963, "population": 5078193},
+            {"name": "Brisbane", "lat": -27.470, "lng": 153.021, "population": 2514184},
+            {"name": "Perth", "lat": -31.951, "lng": 115.861, "population": 2085973},
+            {"name": "Adelaide", "lat": -34.929, "lng": 138.601, "population": 1376601},
+            {"name": "Gold Coast", "lat": -28.017, "lng": 153.400, "population": 679127},
+            {"name": "Hobart", "lat": -42.882, "lng": 147.327, "population": 240342},
+            {"name": "Darwin", "lat": -12.463, "lng": 130.846, "population": 147255}
+          ]
+        },
+        {
+          "id": "NZ", "name": "New Zealand", "capital": "Wellington", "population": 5084300, "area_km2": 268838,
+          "center": {"lat": -40.9, "lng": 174.9},
+          "subdivisions_type": "Regions",
+          "subdivisions": [
+            {"id": "NZ-AUK", "name": "Auckland", "capital": "Auckland", "center": {"lat": -36.8, "lng": 174.8}},
+            {"id": "NZ-WGN", "name": "Wellington", "capital": "Wellington", "center": {"lat": -41.3, "lng": 175.0}},
+            {"id": "NZ-CAN", "name": "Canterbury", "capital": "Christchurch", "center": {"lat": -43.5, "lng": 171.9}}
+          ],
+          "cities": [
+            {"name": "Wellington", "lat": -41.287, "lng": 174.776, "population": 215400, "capital": true},
+            {"name": "Auckland", "lat": -36.849, "lng": 174.762, "population": 1571718},
+            {"name": "Christchurch", "lat": -43.532, "lng": 172.637, "population": 383200},
+            {"name": "Hamilton", "lat": -37.787, "lng": 175.283, "population": 176500}
+          ]
+        },
+        {
+          "id": "PG", "name": "Papua New Guinea", "capital": "Port Moresby", "population": 8947024, "area_km2": 462840,
+          "center": {"lat": -6.3, "lng": 147.0},
+          "cities": [{"name": "Port Moresby", "lat": -9.478, "lng": 147.150, "population": 364125, "capital": true}]
+        },
+        {
+          "id": "FJ", "name": "Fiji", "capital": "Suva", "population": 896445, "area_km2": 18274,
+          "center": {"lat": -17.7, "lng": 178.1},
+          "cities": [{"name": "Suva", "lat": -18.141, "lng": 178.442, "population": 93970, "capital": true}]
+        }
+      ]
+    }
+  ]
+}
